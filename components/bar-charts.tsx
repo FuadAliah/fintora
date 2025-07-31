@@ -10,13 +10,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { OverviewType } from "@/@types";
 
 export function BarCharts({
   chartConfig,
   chartData,
 }: {
   chartConfig: ChartConfig;
-  chartData: any[];
+  chartData: OverviewType[];
 }) {
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
