@@ -13,7 +13,7 @@ import {
 import { chartConfig, chartData } from "@/constant";
 import { useSession } from "next-auth/react";
 
-export default function overview() {
+export default function Overview() {
   const { data: session } = useSession();
 
   return (
