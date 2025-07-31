@@ -19,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     const res = await signIn("credentials", {
-      redirect: false,
+      redirect: true,
       username,
       password,
     });

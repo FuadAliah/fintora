@@ -3,9 +3,13 @@ import { Routes } from "@/utils/routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AuthButton } from "./components/NavMenu";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  console.log("session", session);
 
   return (
     <div>

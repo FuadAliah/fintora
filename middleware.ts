@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   const isAuthPage = req.nextUrl.pathname.startsWith("/login");
 
   if (token && isAuthPage) {
-    return NextResponse.redirect(new URL(Routes.HOME, req.url));
+    return NextResponse.redirect(new URL(Routes.OVERVIEW.url, req.url));
   }
 
   if (!token && req.nextUrl.pathname.startsWith("/dashboard")) {
