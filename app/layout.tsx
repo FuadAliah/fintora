@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import SessionProvider from "./components/SessionProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 import "./globals.css";
 
@@ -27,9 +27,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${rubik.variable} antialiased`}>
-        <SessionProvider session={session}>
-          {children}
-        </SessionProvider>
+        <SessionProvider session={session}>{children}</SessionProvider>
       </body>
     </html>
   );
