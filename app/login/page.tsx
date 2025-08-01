@@ -17,22 +17,33 @@ export default function LoginPage() {
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      });
 
-    const res = await signIn("credentials", {
-      redirect: true,
-      username,
-      password,
-    });
-
-    if (res?.error) {
-      setError("Invalid username or password.");
-    } else {
-      router.push(Routes.HOME);
+      if (res?.error) {
+        setError("Invalid username or password.");
+      } else {
+        router.push(Routes.OVERVIEW.url);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred during login. Please try again.");
     }
   };
 
-  const handleGitHubLogin = () => {
-    signIn("github", { callbackUrl: Routes.OVERVIEW.url });
+  const handleGitHubLogin = async () => {
+    try {
+      await signIn("github", { callbackUrl: Routes.OVERVIEW.url });
+    } catch (error) {
+      console.error("GitHub login error:", error);
+      setError("An error occurred during GitHub login. Please try again.");
+    }
   };
 
   return (

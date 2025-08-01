@@ -2,7 +2,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### Environment Variables Setup
+
+1. Copy the `.env.example` file to create your own `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file with your own values:
+   - Generate a NEXTAUTH_SECRET using `openssl rand -base64 32`
+   - Set up GitHub OAuth credentials at [GitHub Developer Settings](https://github.com/settings/applications/new)
+
+### Running the Development Server
+
+After setting up your environment variables, run the development server:
 
 ```bash
 npm run dev
