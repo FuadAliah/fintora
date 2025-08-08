@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
-import SessionProvider from "./components/SessionProvider";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { Providers } from "./providers";
 
 import "./globals.css";
 
@@ -23,11 +21,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${rubik.variable} antialiased`}>
-        <SessionProvider session={session}>{children}</SessionProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

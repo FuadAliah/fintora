@@ -2,7 +2,7 @@ import { Routes } from "@/utils/routes";
 import Image from "next/image";
 import React from "react";
 import Nav from "./Nav";
-import { AuthButton } from "@/app/components/NavMenu";
+import { NavMenu } from "@/app/_components/NavMenu";
 
 const Header = () => {
   return (
@@ -20,7 +20,7 @@ const Header = () => {
           </a>
         </div>
         <Nav />
-        <AuthButton />
+        <NavMenu />
       </nav>
     </header>
   );
