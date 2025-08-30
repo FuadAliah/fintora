@@ -16,6 +16,7 @@ export default function Nav() {
   const pathname = usePathname();
   const routes = Object.values(Routes);
 
+
   return (
     <div className={`flex items-center`}>
       <ul className={`flex gap-10 text-sm h-full`}>

@@ -18,7 +18,7 @@ export default function LoginPage() {
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -37,9 +37,9 @@ export default function LoginPage() {
     }
   };
 
-  const handleGitHubLogin = async () => {
+  const handleGoogleLogin = async () => {
     try {
-      await signIn("github", { callbackUrl: Routes.OVERVIEW.url });
+      await signIn("google", { callbackUrl: Routes.OVERVIEW.url });
     } catch (error) {
       console.error("GitHub login error:", error);
       setError("An error occurred during GitHub login. Please try again.");
@@ -93,10 +93,10 @@ export default function LoginPage() {
         </div>
 
         <Button
-          onClick={handleGitHubLogin}
-          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+          onClick={handleGoogleLogin}
+          className="w-full bg-white border border-gray-300 text-gray-700 py-4 rounded hover:bg-gray-100 transition"
         >
-          Sign in with GitHub
+          Sign in with Google
         </Button>
       </div>
     </main>

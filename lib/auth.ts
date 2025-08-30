@@ -1,13 +1,69 @@
-import GithubProvider from "next-auth/providers/github";
-import type { AuthOptions } from "next-auth";
+import GoogleProvider from 'next-auth/providers/google';
+import prisma from './prisma';
+import { AuthOptions } from 'next-auth';
+import type { Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 
 export const authOptions: AuthOptions = {
-  providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: true
+    providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
+    ],
+
+    callbacks: {
+        async signIn({ user }) {
+            if (!user.email) return false;
+
+            const existingUser = await prisma.user.findUnique({
+                where: { email: user.email },
+            });
+
+            if (!existingUser) {
+                await prisma.user.create({
+                    data: {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        image: user.image,
+                    },
+                });
+            }
+
+            return true;
+        },
+
+        async jwt({ token, user }) {
+            if (user?.email) {
+                const dbUser = await prisma.user.findUnique({
+                    where: { email: user.email },
+                });
+
+                if (dbUser) token.id = dbUser.id;
+            }
+            return token;
+        },
+
+        async session({ session, token }: { session: Session; token: JWT }) {
+            if (session.user) {
+                session.user.id = token.id as string;
+            }
+            return session;
+        },
+    },
+
+    pages: {
+        signIn: '/login',
+    },
+
+    session: {
+        strategy: 'jwt',
+        maxAge: 60 * 60 * 3,
+        updateAge: 60 * 60 * 3, // its update session if user make action within session time
+    },
+
+    jwt: {
+        maxAge: 60 * 60 * 3,
+    },
 };

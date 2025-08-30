@@ -5,7 +5,7 @@
 /* Use your custom font */
 body {
   font-family: var(--font-rubik);
-  height: 2000px;
+  background-color: #f6f7f9;
 }
 
 *:focus-visible {

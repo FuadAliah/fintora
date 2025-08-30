@@ -8,7 +8,7 @@ export default function TransactionForm({
   };
 
   return (
-    <div className="relative pb-10 pt-5 px-2.5" onClick={onSubmit}>
+    <div className="relative pb-10 pt-5 px-4" onClick={onSubmit}>
       Form
     </div>
   );
