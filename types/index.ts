@@ -24,7 +24,7 @@ export type Transaction = {
     title: string;
     category: string;
     type: string;
-    amount: number;
+    amount: number | null;
     paymentMethod: string;
     userId: string;
     description: string;
@@ -78,10 +78,10 @@ export type Overview = {
 };
 
 type chartData = {
-    date: string
-    income: number
-    expenses: number
-}
+    date: string;
+    income: number;
+    expenses: number;
+};
 
 export type OverviewResponse = {
     data: Overview;
@@ -90,7 +90,7 @@ export type OverviewResponse = {
 };
 
 type chart = {
-    data: chartData[]
+    data: chartData[];
     preset: Preset;
 };
 

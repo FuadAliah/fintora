@@ -84,7 +84,11 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { id, amount, title, type, category, description, userId, status, paymentMethod } = body;
+        const { amount, title, type, category, description, userId, status, paymentMethod } = body;
+
+        if (!userId) {
+            return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+        }
 
         if (!amount || !title || !type || !category || !status || !paymentMethod) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -92,7 +96,6 @@ export async function POST(req: Request) {
 
         const transaction = await prisma.transaction.create({
             data: {
-                id,
                 type,
                 amount,
                 title,
@@ -108,7 +111,7 @@ export async function POST(req: Request) {
                 updatedAt: moment(new Date()).utc(true).toISOString(),
             },
         });
-
+        
         return NextResponse.json(transaction, { status: 201 });
     } catch (error) {
         console.error('Error creating transaction:', error);
