@@ -1,17 +1,15 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { CardHeader, CardTitle } from '@/components/ui/card';
-import { Routes } from '@/utils/routes';
-import { useRouter } from 'next/navigation';
+import { FilterSection } from '@/components/transactions/filter-section';
+import { CardHeader } from '@/components/ui/card';
+import { TransactionsTableProps } from './transactions-table';
 
-export const CustomHeader = () => {
-    const router = useRouter();
+export const CustomHeader = ({ title, type, category, setTitle, setType, setCategory }: TransactionsTableProps) => {
+ 
     return (
         <CardHeader className="flex justify-between items-center px-0">
-            <CardTitle className="font-semiBold">Recent Transactions</CardTitle>
-            <Button variant="outline" onClick={() => router.push(Routes.TRANSACTIONS.url)}>
-                View All
-            </Button>
+            <div className="flex flex-col gap-8">
+                <FilterSection title={title} type={type} category={category} setTitle={setTitle} setType={setType} setCategory={setCategory} />
+            </div>
         </CardHeader>
     );
 };

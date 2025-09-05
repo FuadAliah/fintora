@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import DashboardHeader from '@/components/dashboard-header';
+import DashboardHeader from '@/components/overview-header';
 import DashboardStats from '@/components/dashboard/dashboard-stats';
-import { RecentTransactions } from '@/components/dashboard/overview/recent-transactions';
+import { TransactionsTable } from '@/components/dashboard/overview/transactions-table';
 import { TransactionsOverview } from '@/components/dashboard/overview/transactions-overview';
 import { OverviewResponse } from '@/types';
 import { fetchOverview } from '@/api/overview';
@@ -37,7 +37,17 @@ export default function Overview() {
                     {/* <BalanceOverview /> */}
                     <div className="lg:col-span-1">Breakdown</div>
                 </div>
-                <RecentTransactions />
+                <TransactionsTable
+                    pageSizeParam={5}
+                    title=""
+                    type=""
+                    category=""
+                    setTitle={() => {}}
+                    setType={() => {}}
+                    setCategory={() => {}}
+                    recentTransaction={true}
+                    isPagination={false}
+                />
             </div>
         </>
     );

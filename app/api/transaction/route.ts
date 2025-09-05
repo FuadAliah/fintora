@@ -9,6 +9,7 @@ const paramSchema = z.object({
     userId: z.string().optional(),
     title: z.string().optional(),
     type: z.string().optional(),
+    category: z.string().optional(),
     startDate: z
         .string()
         .refine((val) => isoDateRegex.test(val), {
@@ -30,6 +31,7 @@ const paramSchema = z.object({
 type WhereType = {
     userId?: string;
     title?: { contains: string; mode: 'insensitive' };
+    category?: { equals: string; mode: 'insensitive' };
     type?: { equals: string; mode: 'insensitive' };
     status?: { equals: string; mode: 'insensitive' };
     createdAt?: { gte?: string; lte?: string };
@@ -39,7 +41,7 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         // eslint-disable-next-line prefer-const
-        let { userId, title, sort, order, type, startDate, endDate, currentPage, pageSize } = paramSchema.parse(
+        let { userId, title, sort, order, type, category, startDate, endDate, currentPage, pageSize } = paramSchema.parse(
             Object.fromEntries(searchParams.entries())
         );
 
@@ -47,6 +49,7 @@ export async function GET(req: Request) {
             ...(userId && { userId }),
             ...(title && { title: { contains: title, mode: 'insensitive' } }),
             ...(type && { type: { equals: type, mode: 'insensitive' } }),
+            ...(category && { category: { equals: category, mode: 'insensitive' } }),
         };
 
         if (startDate || endDate) {
@@ -73,7 +76,7 @@ export async function GET(req: Request) {
 
             totalTransactions,
             currentPage,
-            pageSize: pageSize,
+            pageSize,
             totalPages: Math.ceil(totalTransactions / pageSize),
         });
     } catch (error) {
@@ -111,7 +114,7 @@ export async function POST(req: Request) {
                 updatedAt: moment(new Date()).utc(true).toISOString(),
             },
         });
-        
+
         return NextResponse.json(transaction, { status: 201 });
     } catch (error) {
         console.error('Error creating transaction:', error);

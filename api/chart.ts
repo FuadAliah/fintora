@@ -9,23 +9,23 @@ function getDateRange(preset: string) {
 
     switch (preset) {
         case 'last_30_days':
-            from = moment().subtract(30, 'days').startOf('day').toDate();
-            to = moment().endOf('day').toDate();
+            from = moment().utc().subtract(30, 'days').startOf('day').toDate();
+            to = moment().utc().endOf('day').toDate();
             label = 'Last 30 Days';
             break;
         case 'last_month':
-            from = moment().subtract(1, 'month').startOf('month').toDate();
-            to = moment().subtract(1, 'month').endOf('month').toDate();
+            from = moment().utc().subtract(1, 'month').startOf('month').toDate();
+            to = moment().utc().subtract(1, 'month').endOf('month').toDate();
             label = 'Last Month';
             break;
         case 'all_time':
             from = new Date(0);
-            to = moment().endOf('day').toDate();
+            to = moment().utc().endOf('day').toDate();
             label = 'All Time';
             break;
         default:
-            from = moment().subtract(30, 'days').startOf('day').toDate();
-            to = moment().endOf('day').toDate();
+            from = moment().utc().subtract(30, 'days').startOf('day').toDate();
+            to = moment().utc().endOf('day').toDate();
             label = 'Last 30 Days';
             break;
     }

@@ -48,8 +48,6 @@ export function TransactionForm({ onSubmit, defaultValues }: TransactionFormProp
         watch,
         formState: { errors },
     } = form;
-    const selected = watch('paymentMethod');
-    console.log('selected', selected);
 
     return (
         <form onSubmit={handleSubmit((data) => onSubmit({ ...data, userId: session?.user?.id }))} className="space-y-4 px-4 mt-6">

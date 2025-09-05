@@ -53,7 +53,6 @@ export async function fetchOverview(preset: string = DateRangeEnum.LAST_30_DAYS)
 
     const balance = Number(income._sum.amount || 0) - Number(expense._sum.amount || 0);
 
-    // الفترة السابقة
     const prevIncome = await prisma.transaction.aggregate({
         _sum: { amount: true },
         where: { type: 'income', createdAt: { gte: prevFrom, lte: prevTo } },

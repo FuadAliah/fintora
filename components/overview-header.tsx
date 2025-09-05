@@ -19,10 +19,10 @@ type DashboardHeaderProps = {
 
 export default function DashboardHeader({ preset, setPreset }: DashboardHeaderProps) {
     const { data: session } = useSession();
-    const currentLabel = ranges.find((r) => r.value === preset)?.label
+    const currentLabel = ranges.find((r) => r.value === preset)?.label;
 
     return (
-        <div className="flex flex-col lg:flex-row items-start justify-between space-y-7 py-9">
+        <div className="flex flex-col lg:flex-row items-center justify-between space-y-7 py-9">
             <div className="space-y-1">
                 <h2 className="text-2xl lg:text-4xl font-bold text-white">Welcome back, {session?.user?.name ?? 'Guest'}</h2>
                 <p className="text-white/60 text-sm">This is your overview report for the selected period</p>

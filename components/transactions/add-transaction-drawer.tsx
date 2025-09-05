@@ -7,7 +7,7 @@ import { TransactionForm } from './transaction-form';
 import { TransactionFormValues } from '@/zod/transaction';
 
 const AddTransactionDrawer = () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const onCloseDrawer = async (data: TransactionFormValues) => {
         try {
@@ -29,7 +29,7 @@ const AddTransactionDrawer = () => {
         } catch (err) {
             console.error('❌ Error creating transaction:', err);
         }
-        // setOpen(false);
+        setOpen(false);
     };
 
     return (

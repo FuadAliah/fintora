@@ -30,7 +30,10 @@ export const summaryData = {
 };
 
 type FetchTransactionsParams = {
-    page?: number;
+    title?: string;
+    type?: string;
+    category?: string;
+    currentPage?: number;
     pageSize?: number;
     startDate?: string;
     endDate?: string;
@@ -39,7 +42,10 @@ type FetchTransactionsParams = {
 };
 
 export async function fetchTransactions({
-    page = 1,
+    title,
+    type,
+    category,
+    currentPage = 1,
     pageSize = 10,
     startDate,
     endDate,
@@ -47,8 +53,11 @@ export async function fetchTransactions({
     order,
 }: FetchTransactionsParams): Promise<TransactionResponse> {
     const query = new URLSearchParams({
-        page: page.toString(),
+        currentPage: currentPage.toString(),
         pageSize: pageSize.toString(),
+        ...(title?.length && title?.length >= 3 && { title }),
+        ...(type && { type }),
+        ...(category && { category }),
         ...(startDate && { startDate }),
         ...(endDate && { endDate }),
         ...(sortBy && { sortBy }),
@@ -67,6 +76,15 @@ export async function fetchTransactions({
     return res.json();
 }
 
-export async function fetchChart({}){
-    
+export async function deleteTransaction(id: string): Promise<void> {
+    const res = await fetch(`/api/transaction?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+        throw new Error(`Failed to delete transaction: ${res.statusText}`);
+    }
+
+    return res.json();
 }

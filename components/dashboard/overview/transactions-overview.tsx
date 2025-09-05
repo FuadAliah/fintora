@@ -22,8 +22,8 @@ export const TransactionsOverview = ({ preset }: { preset: string }) => {
         const chartData = await fetchChart(preset);
 
         const date = chartData.data.map((item) => moment(item.date).utc().format('DD MMM YYYY'));
-        const income = chartData?.data.map((item: any) => item.income);
-        const expense = chartData?.data.map((item: any) => item.expense);
+        const income = chartData?.data.map((item) => item.income);
+        const expense = chartData?.data.map((item) => item.expense);
 
         setIncomCount(chartData.incomeCount);
         setExpenseCount(chartData.expenseCount);
@@ -38,6 +38,7 @@ export const TransactionsOverview = ({ preset }: { preset: string }) => {
 
     useEffect(() => {
         fetchCharts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [preset]);
 
     return (
