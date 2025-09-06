@@ -41,7 +41,7 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         // eslint-disable-next-line prefer-const
-        let { userId, title, sort, order, type, category, startDate, endDate, currentPage, pageSize } = paramSchema.parse(
+        let { userId, title, sort, order, type, category, startDate, endDate, currentPage: page, pageSize } = paramSchema.parse(
             Object.fromEntries(searchParams.entries())
         );
 
@@ -65,7 +65,7 @@ export async function GET(req: Request) {
         }
 
         const [transactions, totalTransactions] = await Promise.all([
-            prisma.transaction.findMany({ where, orderBy: { [sort]: order }, skip: (currentPage - 1) * pageSize, take: pageSize }),
+            prisma.transaction.findMany({ where, orderBy: { [sort]: order }, skip: (page - 1) * pageSize, take: pageSize }),
             prisma.transaction.count({ where }),
         ]);
 
@@ -75,7 +75,7 @@ export async function GET(req: Request) {
             message: 'Transactions fetched successfully',
 
             totalTransactions,
-            currentPage,
+            page,
             pageSize,
             totalPages: Math.ceil(totalTransactions / pageSize),
         });

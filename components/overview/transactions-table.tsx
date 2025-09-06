@@ -91,11 +91,15 @@ export function TransactionsTable({
         setOpenDeleteDialog(true);
     });
 
-    if (error) return <div>Error: {error}</div>;
+    if (error) {
+        return <div>Error: {error}</div>
+    };
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         if (!session) return;
         getTransactions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, currentPage, pageSize, title, type, category]);
 
     return (

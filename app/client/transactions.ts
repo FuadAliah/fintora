@@ -54,7 +54,7 @@ export async function fetchTransactions({
     order,
 }: FetchTransactionsParams): Promise<TransactionResponse> {
     const query = new URLSearchParams({
-        currentPage: currentPage.toString(),
+        page: currentPage.toString(),
         pageSize: pageSize.toString(),
         ...(title?.length && title?.length >= 3 && { title }),
         ...(type && { type }),
