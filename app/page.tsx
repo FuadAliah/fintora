@@ -1,6 +1,6 @@
 import { Routes } from "@/utils/routes";
 import Image from "next/image";
-import { NavMenu } from "./_components/NavMenu";
+import { Navbar } from "./_components/navbar";
 import { getServerSession } from "next-auth";
 
 export default async function Home() {
@@ -22,7 +22,7 @@ export default async function Home() {
             />
           </a>
         </div>
-        <NavMenu />
+        <Navbar />
       </nav>
       <section className="bg-white lg:grid lg:h-screen lg:place-content-center">
         <div className="mx-auto w-screen max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">

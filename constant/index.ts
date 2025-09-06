@@ -34,46 +34,13 @@ export const PAYMENT_METHODS = [
     { value: PAYMENT_METHODS_ENUM.OTHER, label: 'Other' },
 ];
 
-export const _TRANSACTION_FREQUENCY = {
-    DAILY: 'DAILY',
-    WEEKLY: 'WEEKLY',
-    MONTHLY: 'MONTHLY',
-    YEARLY: 'YEARLY',
-} as const;
-
-export type TransactionFrequencyType = keyof typeof _TRANSACTION_FREQUENCY;
-
-export const _TRANSACTION_TYPE = {
-    INCOME: 'INCOME',
-    EXPENSE: 'EXPENSE',
-} as const;
-
-export type _TransactionType = keyof typeof _TRANSACTION_TYPE;
-
-export const _TRANSACTION_STATUS = {
-    PENDING: 'PENDING',
-    COMPLETED: 'COMPLETED',
-    FAILED: 'FAILED',
-} as const;
-
 export const DateRangeEnum = {
     LAST_30_DAYS: 'last_30_days',
     LAST_MONTH: 'last_month',
     ALL_TIME: 'all_time',
 } as const;
 
-export type TransactionStatusType = keyof typeof _TRANSACTION_STATUS;
-
-export const _REPORT_STATUS = {
-    SENT: 'SENT',
-    FAILED: 'FAILED',
-    PENDING: 'PENDING',
-    PROCESSING: 'PROCESSING',
-    NO_ACTIVITY: 'NO_ACTIVITY',
-} as const;
-
 export const transactionChartData = {
-    
     series: [
         {
             name: 'Expenses',
@@ -85,5 +52,3 @@ export const transactionChartData = {
         },
     ],
 };
-
-export type ReportStatusType = keyof typeof _REPORT_STATUS;

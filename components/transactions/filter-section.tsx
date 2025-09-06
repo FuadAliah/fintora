@@ -3,7 +3,7 @@
 import { CATEGORIES } from '@/constant';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Input } from '../ui/input';
-import { TransactionsTableProps } from '../dashboard/overview/transactions-table';
+import { TransactionsTableProps } from '../overview/transactions-table';
 import { Button } from '../ui/button';
 import { XIcon } from 'lucide-react';
 

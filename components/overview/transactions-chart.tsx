@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { LineCharts } from '@/components/line-charts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { fetchChart } from '@/api/chart';
+import { fetchChart } from '@/app/client/chart';
 import { ChartSeries } from '@/types';
 import moment from 'moment';
 import { formatPresetText } from '@/utils/format-text';

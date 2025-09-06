@@ -1,17 +1,17 @@
 'use client';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableLoadingIndicator, TableRow } from '@/components/ui/table';
 import { Transaction, TransactionResponse } from '@/types';
-import { CustomHeader } from './custom-header';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { deleteTransaction, fetchTransactions } from '@/api/transactions';
+import { deleteTransaction, fetchTransactions } from '@/app/client/transactions';
 import { Card, CardTitle } from '@/components/ui/card';
 import { createTransactionsColumns } from '@/components/transactions/transactions-columns';
 import { DeleteDialog } from '@/components/transactions/delete-dialog';
 import { usePathname, useRouter } from 'next/navigation';
 import { Routes } from '@/utils/routes';
 import { Button } from '@/components/ui/button';
-import { DataTablePagination } from '../../ui/pagination';
+import { DataTablePagination } from '../ui/pagination';
+import { FilterSection } from '../transactions/filter-section';
 
 export type TransactionsTableProps = {
     pageSize?: number;
@@ -110,7 +110,7 @@ export function TransactionsTable({
             )}
             <Card className="border-0 px-6 my-8">
                 {!recentTransaction ? (
-                    <CustomHeader
+                    <FilterSection
                         title={title}
                         type={type}
                         category={category}

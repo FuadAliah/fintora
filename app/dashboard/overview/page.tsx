@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import DashboardHeader from '@/components/overview-header';
-import DashboardStats from '@/components/dashboard/dashboard-stats';
-import { TransactionsTable } from '@/components/dashboard/overview/transactions-table';
-import { TransactionsOverview } from '@/components/dashboard/overview/transactions-overview';
+import DashboardStats from '@/components/overview/dashboard-statistics';
+import { TransactionsTable } from '@/components/overview/transactions-table';
+import { TransactionsOverview } from '@/components/overview/transactions-chart';
 import { OverviewResponse } from '@/types';
-import { fetchOverview } from '@/api/overview';
+import { fetchOverview } from '@/app/client/overview';
 import { DateRangeEnum } from '@/constant';
 
 export default function Overview() {

@@ -7,12 +7,7 @@ export const getActiveClass = (route: string, pathname: string) => {
   return pathname === route ? "text-white/100" : "text-white/60";
 };
 
-export interface languageProps {
-  language: string;
-  changeLanguage: (lang: string) => void;
-}
-
-export default function Nav() {
+export default function Menu() {
   const pathname = usePathname();
   const routes = Object.values(Routes);
 

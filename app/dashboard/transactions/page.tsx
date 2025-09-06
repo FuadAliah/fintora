@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { TransactionsTable } from '@/components/dashboard/overview/transactions-table';
+import { TransactionsTable } from '@/components/overview/transactions-table';
 import TransactionHeader from '@/components/transaction-header';
 
 export default function Transactions() {
@@ -11,9 +11,7 @@ export default function Transactions() {
     return (
         <>
             <div className="w-full bg-[var(--secondary-dark-color)]">
-                <div className="max-w-[1248px] mx-auto">
-                    <TransactionHeader />
-                </div>
+                <div className="max-w-[1248px] mx-auto"><TransactionHeader /></div>
             </div>
             <div className="max-w-[1248px] mx-auto">
                 <TransactionsTable
