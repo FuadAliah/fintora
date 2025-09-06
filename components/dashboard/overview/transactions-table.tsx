@@ -11,8 +11,7 @@ import { DeleteDialog } from '@/components/transactions/delete-dialog';
 import { usePathname, useRouter } from 'next/navigation';
 import { Routes } from '@/utils/routes';
 import { Button } from '@/components/ui/button';
-import { Pagination } from '@/components/ui/pagination';
-import { DataTablePagination } from './table-pagination';
+import { DataTablePagination } from '../../ui/pagination';
 
 export type TransactionsTableProps = {
     pageSize?: number;
@@ -46,7 +45,6 @@ export function TransactionsTable({
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null);
-    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const [transactions, setTransactions] = useState<TransactionResponse | null>(null);
     const [loading, setLoading] = useState(true);
@@ -79,14 +77,12 @@ export function TransactionsTable({
         try {
             await deleteTransaction(transaction.id);
             await getTransactions();
-            setDeleteError(null);
         } catch (error: unknown) {
-            setDeleteError(error instanceof Error ? error.message : 'An error occurred');
+            console.log(error instanceof Error ? error.message : 'An error occurred');
         } finally {
             setOpenDeleteDialog(false);
             document.body.style.pointerEvents = 'auto';
             setTransactionToDelete(null);
-            setDeleteError(null);
         }
     };
 
@@ -163,16 +159,18 @@ export function TransactionsTable({
                         </TableBody>
                         <TableFooter>
                             {isPagination && (
-                                <TableHead className='py-3' colSpan={transactionsColumns.length}>
-                                    <DataTablePagination
-                                        pageNumber={transactions?.currentPage || 1}
-                                        pageSize={transactions?.pageSize || 10}
-                                        totalCount={transactions?.totalTransactions || 0}
-                                        totalPages={transactions?.totalPages || 0}
-                                        onPageChange={onPageChange}
-                                        onPageSizeChange={onPageSizeChange}
-                                    />
-                                </TableHead>
+                                <TableRow>
+                                    <TableCell className="py-3" colSpan={transactionsColumns.length}>
+                                        <DataTablePagination
+                                            pageNumber={transactions?.currentPage || 1}
+                                            pageSize={transactions?.pageSize || 10}
+                                            totalCount={transactions?.totalTransactions || 0}
+                                            totalPages={transactions?.totalPages || 0}
+                                            onPageChange={onPageChange}
+                                            onPageSizeChange={onPageSizeChange}
+                                        />
+                                    </TableCell>
+                                </TableRow>
                             )}
                         </TableFooter>
                     </Table>

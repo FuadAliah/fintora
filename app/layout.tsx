@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import { Providers } from './providers';
+import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
 
@@ -25,6 +26,7 @@ export default async function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={`${rubik.variable} antialiased`}>
                 <Providers>{children}</Providers>
+                <Toaster />
             </body>
         </html>
     );

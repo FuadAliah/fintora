@@ -1,4 +1,5 @@
 import { TransactionResponse } from '@/types';
+import { toast } from 'sonner';
 
 export const summaryData = {
     availableBalance: 200,
@@ -77,14 +78,28 @@ export async function fetchTransactions({
 }
 
 export async function deleteTransaction(id: string): Promise<void> {
-    const res = await fetch(`/api/transaction?id=${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+        const res = await fetch(`/api/transaction?id=${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        });
 
-    if (!res.ok) {
-        throw new Error(`Failed to delete transaction: ${res.statusText}`);
+        if (!res.ok) {
+            throw new Error(`Failed to delete transaction: ${res.statusText}`);
+        }
+
+        await res.json();
+
+        toast.success('Transaction deleted successfully!', {
+            duration: 4000,
+            position: 'top-center',
+        });
+    } catch (error) {
+        toast.error('Failed to delete transaction', {
+            duration: 4000,
+            position: 'top-center',
+        });
+
+        throw error;
     }
-
-    return res.json();
 }
