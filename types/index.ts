@@ -19,7 +19,7 @@ export type ChartData = {
     series: ChartSeries;
 };
 
-export type Transaction = {
+export type Invoice = {
     id: string;
     title: string;
     category: string;
@@ -28,15 +28,15 @@ export type Transaction = {
     paymentMethod: string;
     userId: string;
     description: string;
-    date: string; // ISO string
+    date: string;
     status: string;
     createdAt: string;
     updatedAt: string;
 };
 
-export type TransactionResponse = {
-    data: Transaction[];
-    totalTransactions: number;
+export type InvoiceResponse = {
+    data: Invoice[];
+    totalInvoices: number;
     currentPage: number;
     pageSize: number;
     totalPages: number;
@@ -70,7 +70,7 @@ export type Overview = {
     availableBalance: number;
     totalIncome: number;
     totalExpenses: number;
-    transactionCount: number;
+    invoiceCount: number;
     savingRate: SavingRate;
     percentageChange: PercentageChange;
     previousValues: PreviousValues;

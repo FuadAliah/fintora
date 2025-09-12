@@ -39,46 +39,14 @@ function getDateRange(preset: string) {
 export async function fetchChart(preset: string = DateRangeEnum.LAST_30_DAYS) {
     const { from, to, label, value } = getDateRange(preset);
 
-    const transactions = await prisma.transaction.findMany({
-        where: { date: { gte: moment(from).utc().toISOString(), lte: moment(to).utc().toISOString() } },
-        select: { date: true, amount: true, type: true },
-    });
-
-    const groupedData = transactions.reduce((acc: Record<string, { income: number; expense: number }>, curr) => {
-        const date = moment(curr.date).format('DD MMM YYYY');
-
-        if (!acc[date]) {
-            acc[date] = { income: 0, expense: 0 };
-        }
-
-        if (curr.type === 'income') {
-            acc[date].income += +curr.amount;
-        } else if (curr.type === 'expense') {
-            acc[date].expense += +curr.amount;
-        }
-
-        return acc;
-    }, {});
-
-    const formattedTransactions = Object.entries(groupedData).map(([date, totals]) => ({
-        date,
-        income: totals.income,
-        expense: totals.expense,
-    }));
-
-    const incomeCount = await prisma.transaction.count({
-        where: { type: 'income', date: { gte: moment(from).utc().toISOString(), lte: moment(to).utc().toISOString() } },
-    });
-    const expenseCount = await prisma.transaction.count({
-        where: { type: 'expense', date: { gte: moment(from).utc().toISOString(), lte: moment(to).utc().toISOString() } },
+    const invoices = await prisma.invoice.findMany({
+        where: { issueDate: { gte: moment(from).utc().toISOString(), lte: moment(to).utc().toISOString() } },
     });
 
     return {
         status: 200,
-        message: 'Transaction overview chart fetched successfully',
+        message: 'Invoice overview chart fetched successfully',
         preset: { label, value, from, to },
-        data: formattedTransactions,
-        incomeCount,
-        expenseCount,
+        data: invoices,
     };
 }

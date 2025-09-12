@@ -3,15 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { PlusIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
-import { TransactionForm } from './transaction-form';
-import { TransactionFormValues } from '@/zod/transaction';
+import { InvoiceForm } from './invoice-form';
+import { InvoiceFormValues } from '@/zod/invoice';
+// import { useSession } from 'next-auth/react';
 
-const AddTransactionDrawer = () => {
+export const AddInvoiceDrawer = () => {
     const [open, setOpen] = useState(false);
 
-    const onCloseDrawer = async (data: TransactionFormValues) => {
+    const onCloseDrawer = async (data: InvoiceFormValues) => {
         try {
-            const res = await fetch('/api/transaction', {
+            const res = await fetch('/api/invoice', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -21,13 +22,12 @@ const AddTransactionDrawer = () => {
                 }),
             });
 
-            if (!res.ok) throw new Error('Failed to create transaction');
+            if (!res.ok) throw new Error('Failed to create invoice');
 
             const result = await res.json();
-            console.log('✅ Transaction created:', result);
-
+            console.log('✅ Invoice created:', result);
         } catch (err) {
-            console.error('❌ Error creating transaction:', err);
+            console.error('❌ Error creating invoice:', err);
         }
         setOpen(false);
     };
@@ -37,23 +37,21 @@ const AddTransactionDrawer = () => {
             <DrawerTrigger asChild>
                 <Button className="!cursor-pointer !text-white">
                     <PlusIcon className="h-4 w-4" />
-                    Add Transaction
+                    Add Invoice
                 </Button>
             </DrawerTrigger>
             <DrawerContent className="!max-w-md overflow-hidden overflow-y-auto">
                 <DrawerHeader className="relative">
                     <div>
-                        <DrawerTitle className="text-xl font-semibold">Add Transaction</DrawerTitle>
-                        <DrawerDescription>Add a new transaction to track your finances</DrawerDescription>
+                        <DrawerTitle className="text-xl font-semibold">Add Invoice</DrawerTitle>
+                        <DrawerDescription>Add a new invoice to track your finances</DrawerDescription>
                     </div>
                     <DrawerClose className="absolute top-4 right-4">
                         <XIcon className="h-5 w-5 !cursor-pointer" />
                     </DrawerClose>
                 </DrawerHeader>
-                <TransactionForm onSubmit={onCloseDrawer} />
+                <InvoiceForm onSubmit={onCloseDrawer} />
             </DrawerContent>
         </Drawer>
     );
 };
-
-export default AddTransactionDrawer;

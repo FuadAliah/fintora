@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const TransactionSchema = z.object({
+export const InvoiceSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     category: z.string().min(1, { message: "Please select a category." }),
     type: z.enum(['income', 'expense']),
@@ -11,4 +11,4 @@ export const TransactionSchema = z.object({
     status: z.enum(['pending', 'completed', 'cancelled']),
 });
 
-export type TransactionFormValues = z.infer<typeof TransactionSchema>;
+export type InvoiceFormValues = z.infer<typeof InvoiceSchema>;

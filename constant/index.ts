@@ -40,7 +40,7 @@ export const DateRangeEnum = {
     ALL_TIME: 'all_time',
 } as const;
 
-export const transactionChartData = {
+export const invoiceChartData = {
     series: [
         {
             name: 'Expenses',

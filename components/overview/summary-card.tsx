@@ -25,6 +25,7 @@ interface SummaryCardProps {
     isLoading?: boolean;
     expenseRatio?: number;
     cardType: CardType;
+    bgColor?: string;
 
     preset?: {
         from: string;
@@ -88,6 +89,7 @@ const SummaryCard: FC<SummaryCardProps> = ({
     percentageChange,
     isPercentageValue,
     isLoading,
+    bgColor,
     expenseRatio,
     cardType,
 }) => {
@@ -122,13 +124,13 @@ const SummaryCard: FC<SummaryCardProps> = ({
     };
 
     return (
-        <Card className="!border-none !bg-white/5">
+        <Card className={`!border-none !shadow-none !px-0 py-6 ${bgColor}`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-[15px] text-gray-300 font-medium">{title}</CardTitle>
+                <CardTitle className="text-[14px] text-gray-600 font-medium">{title}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
-                <div className={cn('text-4xl font-bold', cardType === 'balance' && value < 0 ? 'text-red-400' : 'text-white')}>
-                    <CountUp start={0} end={value} preserveValue decimals={2} decimalPlaces={2} formattingFn={formatCountupValue} />
+                <div className={cn('text-4xl font-bold', cardType === 'balance' && value < 0 ? 'text-red-400' : 'text-green-500')}>
+                    <CountUp start={0} end={value || 40} preserveValue decimals={2} decimalPlaces={2} formattingFn={formatCountupValue} />
                 </div>
 
                 <div className="text-sm text-muted-foreground mt-2">

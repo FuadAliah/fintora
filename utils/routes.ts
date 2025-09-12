@@ -1,10 +1,15 @@
-export const Routes = {
-  LOGIN: "/login",
-  HOME: "/",
+import { ChartPie, House, NotepadText, Package2, Settings, Users, UsersRound } from 'lucide-react';
 
-  // Dashboard
-  OVERVIEW: { label: "Overview", url: "/dashboard/overview" },
-  TRANSACTIONS: { label: "Transactions", url: "/dashboard/transactions" },
-  REPORTS: { label: "Reports", url: "/dashboard/reports" },
-  SETTINGS: { label: "Settings", url: "/dashboard/settings" },
+export const Routes = {
+    LOGIN: '/login',
+    HOME: '/',
+
+    // Dashboard
+    OVERVIEW: { label: 'Overview', icon: House, url: '/dashboard/overview' },
+    USERMANAGE: { label: 'User Management', icon: Users, url: '/dashboard/users' },
+    CUSTOMERS: { label: 'Customers', icon: UsersRound, url: '/dashboard/customers' },
+    INVOICES: { label: 'Invoices', icon: NotepadText, url: '/dashboard/invoices' },
+    PRODUCTS: { label: 'Products', icon: Package2, url: '/dashboard/products' },
+    REPORTS: { label: 'Reports', icon: ChartPie, url: '/dashboard/reports' },
+    SETTINGS: { label: 'Settings', icon: Settings, url: '/dashboard/settings' },
 };

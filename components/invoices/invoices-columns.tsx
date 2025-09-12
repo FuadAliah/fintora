@@ -1,34 +1,31 @@
-import { Transaction } from '@/types';
+import { Invoice } from '@/types';
 import { Ellipsis, TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
 import moment from 'moment';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
-export const createTransactionsColumns = (
-    handleView: (transaction: Transaction) => void,
-    handleDelete: (transaction: Transaction) => void
-) => [
+export const InvoicesColumns = (handleView: (invoice: Invoice) => void, handleDelete: (invoice: Invoice) => void) => [
     {
-        header: 'Transaction Date',
+        header: 'Invoice Date',
         accessor: 'date',
-        cell: ({ row }: { row: Transaction }) => moment(row.date).format('DD MMM YYYY'),
+        cell: ({ row }: { row: Invoice }) => moment(row.date).format('DD MMM YYYY'),
         sortable: true,
     },
     {
         header: 'Title',
         accessor: 'title',
-        cell: ({ row }: { row: Transaction }) => row.title,
+        cell: ({ row }: { row: Invoice }) => row.title,
         sortable: true,
     },
     {
         header: 'Category',
         accessor: 'category',
-        cell: ({ row }: { row: Transaction }) => row.category,
+        cell: ({ row }: { row: Invoice }) => row.category,
     },
     {
         header: 'Amount',
         accessor: 'amount',
-        cell: ({ row }: { row: Transaction }) =>
+        cell: ({ row }: { row: Invoice }) =>
             row.type === 'income' ? (
                 <div className="text-green-500 flex items-center gap-2">
                     <TrendingUpIcon size={16} />
@@ -45,7 +42,7 @@ export const createTransactionsColumns = (
     {
         header: 'Type',
         accessor: 'type',
-        cell: ({ row }: { row: Transaction }) => (
+        cell: ({ row }: { row: Invoice }) => (
             <span
                 className={`capitalize text-xs rounded-full px-3 py-1
           ${row.type === 'income' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}
@@ -58,12 +55,12 @@ export const createTransactionsColumns = (
     {
         header: 'Description',
         accessor: 'description',
-        cell: ({ row }: { row: Transaction }) => row.description,
+        cell: ({ row }: { row: Invoice }) => row.description,
     },
     {
         header: 'Actions',
         accessor: 'actions',
-        cell: ({ row }: { row: Transaction }) => (
+        cell: ({ row }: { row: Invoice }) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" aria-label="Open actions menu">

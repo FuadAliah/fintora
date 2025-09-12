@@ -1,20 +1,23 @@
 'use client';
 import React, { useState } from 'react';
-import { TransactionsTable } from '@/components/overview/transactions-table';
-import TransactionHeader from '@/components/transaction-header';
+import { InvoicesTable } from '@/components/overview/invoices-table';
+import PageHeader from '@/components/page-header';
+import { AddInvoiceDrawer } from '@/components/invoices/add-invoice-drawer';
 
-export default function Transactions() {
+export default function Invoices() {
     const [title, setTitle] = useState<string>('');
     const [type, setType] = useState<string>('');
     const [category, setCategory] = useState<string>('');
 
     return (
         <>
-            <div className="w-full bg-[var(--secondary-dark-color)]">
-                <div className="max-w-[1248px] mx-auto"><TransactionHeader /></div>
+            <div className="mx-auto">
+                <PageHeader pageTitle="Invoices">
+                    <AddInvoiceDrawer />
+                </PageHeader>
             </div>
-            <div className="max-w-[1248px] mx-auto">
-                <TransactionsTable
+            <div className="mx-auto">
+                <InvoicesTable
                     title={title}
                     type={type}
                     category={category}

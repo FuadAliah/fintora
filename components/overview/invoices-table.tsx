@@ -1,19 +1,19 @@
 'use client';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableLoadingIndicator, TableRow } from '@/components/ui/table';
-import { Transaction, TransactionResponse } from '@/types';
+import { Invoice, InvoiceResponse } from '@/types';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { deleteTransaction, fetchTransactions } from '@/app/client/transactions';
+import { InvoicesColumns } from '../invoices/invoices-columns';
 import { Card, CardTitle } from '@/components/ui/card';
-import { createTransactionsColumns } from '@/components/transactions/transactions-columns';
-import { DeleteDialog } from '@/components/transactions/delete-dialog';
+import { DeleteDialog } from '@/components/invoices/delete-dialog';
 import { usePathname, useRouter } from 'next/navigation';
 import { Routes } from '@/utils/routes';
 import { Button } from '@/components/ui/button';
 import { DataTablePagination } from '../ui/pagination';
-import { FilterSection } from '../transactions/filter-section';
+import { FilterSection } from '../invoices/filter-section';
+import { deleteInvoice, fetchInvoices } from '@/app/client/invoices';
 
-export type TransactionsTableProps = {
+export type InvoicesTableProps = {
     pageSize?: number;
     title: string;
     type: string;
@@ -21,39 +21,40 @@ export type TransactionsTableProps = {
     setTitle: (title: string) => void;
     setType: (type: string) => void;
     setCategory: (category: string) => void;
-    recentTransaction?: boolean;
+    recentInvoice?: boolean;
     isPagination?: boolean;
     pageSizeParam?: number;
 };
 
-export function TransactionsTable({
+export function InvoicesTable({
     title,
     type,
     category,
     setTitle,
     setType,
     setCategory,
-    recentTransaction,
+    recentInvoice,
     isPagination = true,
     pageSizeParam = 10,
-}: TransactionsTableProps) {
+}: InvoicesTableProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const route = usePathname();
+
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(pageSizeParam || 5);
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null);
+    const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
 
-    const [transactions, setTransactions] = useState<TransactionResponse | null>(null);
+    const [invoices, setInvoices] = useState<InvoiceResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    async function getTransactions() {
+    async function getInvoices() {
         try {
-            const data = await fetchTransactions({ currentPage, pageSize, title, type, category });
-            setTransactions(data);
+            const data = await fetchInvoices({ currentPage, pageSize, title, type, category });
+            setInvoices(data);
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'An error occurred');
         } finally {
@@ -69,51 +70,50 @@ export function TransactionsTable({
         setPageSize(size);
     };
 
-    const handleView = (transaction: Transaction) => {
-        console.log('Viewing transaction:', transaction);
+    const handleView = (invoice: Invoice) => {
+        console.log('Viewing invoice:', invoice);
     };
 
-    const handleDelete = async (transaction: Transaction) => {
+    const handleDelete = async (invoice: Invoice) => {
         try {
-            await deleteTransaction(transaction.id);
-            await getTransactions();
+            await deleteInvoice(invoice.id);
+            await getInvoices();
         } catch (error: unknown) {
             console.log(error instanceof Error ? error.message : 'An error occurred');
         } finally {
             setOpenDeleteDialog(false);
-            document.body.style.pointerEvents = 'auto';
-            setTransactionToDelete(null);
+            setInvoiceToDelete(null);
         }
     };
 
-    const transactionsColumns = createTransactionsColumns(handleView, (transaction: Transaction) => {
-        setTransactionToDelete(transaction);
+    const invoicesColumns = InvoicesColumns(handleView, (invoice: Invoice) => {
+        setInvoiceToDelete(invoice);
         setOpenDeleteDialog(true);
     });
 
     if (error) {
-        return <div>Error: {error}</div>
-    };
+        return <div>Error: {error}</div>;
+    }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         if (!session) return;
-        getTransactions();
+        getInvoices();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, currentPage, pageSize, title, type, category]);
 
     return (
         <>
-            {openDeleteDialog && transactionToDelete && (
+            {openDeleteDialog && invoiceToDelete && (
                 <DeleteDialog
-                    transaction={transactionToDelete}
+                    invoice={invoiceToDelete}
                     open={openDeleteDialog}
                     onOpenChange={setOpenDeleteDialog}
-                    handleDelete={() => handleDelete(transactionToDelete)}
+                    handleDelete={() => handleDelete(invoiceToDelete)}
                 />
             )}
-            <Card className="border-0 px-6 my-8">
-                {!recentTransaction ? (
+            <Card className="border-0 px-6">
+                {!recentInvoice ? (
                     <FilterSection
                         title={title}
                         type={type}
@@ -124,9 +124,9 @@ export function TransactionsTable({
                     />
                 ) : (
                     <div className="flex justify-between items-center">
-                        <CardTitle>Recent Transactions</CardTitle>
-                        {!route.includes(Routes.TRANSACTIONS.url) && (
-                            <Button variant="outline" onClick={() => router.push(Routes.TRANSACTIONS.url)}>
+                        <CardTitle>Recent Invoices</CardTitle>
+                        {!route.includes(Routes.INVOICES.url) && (
+                            <Button variant="outline" onClick={() => router.push(Routes.INVOICES.url)}>
                                 View All
                             </Button>
                         )}
@@ -137,7 +137,7 @@ export function TransactionsTable({
                     <Table className="text-sm border">
                         <TableHeader className="bg-slate-100 rounded-t-2xl">
                             <TableRow>
-                                {transactionsColumns.map((column) => (
+                                {invoicesColumns.map((column) => (
                                     <TableHead key={column.accessor}>
                                         <span>{column.header}</span>
                                     </TableHead>
@@ -145,18 +145,18 @@ export function TransactionsTable({
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactions?.data?.length ? (
-                                transactions?.data?.map((transaction: Transaction) => (
-                                    <TableRow key={transaction.id}>
-                                        {transactionsColumns.map((col) => (
-                                            <TableCell key={col.accessor}>{col?.cell({ row: transaction })}</TableCell>
+                            {invoices?.data?.length ? (
+                                invoices?.data?.map((invoice: Invoice) => (
+                                    <TableRow key={invoice.id}>
+                                        {invoicesColumns.map((col) => (
+                                            <TableCell key={col.accessor}>{col?.cell({ row: invoice })}</TableCell>
                                         ))}
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow className="h-32">
-                                    <TableCell className="text-center text-muted-foreground" colSpan={transactionsColumns.length}>
-                                        No transactions found
+                                    <TableCell className="text-center text-muted-foreground" colSpan={invoicesColumns.length}>
+                                        No invoices found
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -164,12 +164,12 @@ export function TransactionsTable({
                         <TableFooter>
                             {isPagination && (
                                 <TableRow>
-                                    <TableCell className="py-3" colSpan={transactionsColumns.length}>
+                                    <TableCell className="py-3" colSpan={invoicesColumns.length}>
                                         <DataTablePagination
-                                            pageNumber={transactions?.currentPage || 1}
-                                            pageSize={transactions?.pageSize || 10}
-                                            totalCount={transactions?.totalTransactions || 0}
-                                            totalPages={transactions?.totalPages || 0}
+                                            pageNumber={invoices?.currentPage || 1}
+                                            pageSize={invoices?.pageSize || 10}
+                                            totalCount={invoices?.totalInvoices || 0}
+                                            totalPages={invoices?.totalPages || 0}
                                             onPageChange={onPageChange}
                                             onPageSizeChange={onPageSizeChange}
                                         />

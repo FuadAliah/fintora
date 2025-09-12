@@ -1,4 +1,4 @@
-import { TransactionResponse } from '@/types';
+import { InvoiceResponse } from '@/types';
 import { toast } from 'sonner';
 
 export const summaryData = {
@@ -9,7 +9,7 @@ export const summaryData = {
         percentage: 40,
         expenseRatio: 60,
     },
-    transactionCount: 2,
+    invoiceCount: 2,
     percentageChange: {
         income: 0,
         expenses: 0,
@@ -30,7 +30,7 @@ export const summaryData = {
     },
 };
 
-type FetchTransactionsParams = {
+type FetchInvoicesParams = {
     title?: string;
     type?: string;
     category?: string;
@@ -42,7 +42,7 @@ type FetchTransactionsParams = {
     order?: string;
 };
 
-export async function fetchTransactions({
+export async function fetchInvoices({
     title,
     type,
     category,
@@ -52,7 +52,7 @@ export async function fetchTransactions({
     endDate,
     sortBy,
     order,
-}: FetchTransactionsParams): Promise<TransactionResponse> {
+}: FetchInvoicesParams): Promise<InvoiceResponse> {
     const query = new URLSearchParams({
         page: currentPage.toString(),
         pageSize: pageSize.toString(),
@@ -65,37 +65,38 @@ export async function fetchTransactions({
         ...(order && { order }),
     });
 
-    const res = await fetch(`/api/transaction?${query.toString()}`, {
+    const res = await fetch(`/api/invoice?${query.toString()}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
     });
 
     if (!res.ok) {
-        throw new Error(`Failed to fetch transactions: ${res.statusText}`);
+        throw new Error(`Failed to fetch invoices: ${res.statusText}`);
     }
 
     return res.json();
 }
 
-export async function deleteTransaction(id: string): Promise<void> {
+export async function deleteInvoice(id: string): Promise<void> {
     try {
-        const res = await fetch(`/api/transaction?id=${id}`, {
+        const res = await fetch(`/api/invoice?id=${id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         });
 
         if (!res.ok) {
-            throw new Error(`Failed to delete transaction: ${res.statusText}`);
+            throw new Error(`Failed to delete invoice: ${res.statusText}`);
         }
 
         await res.json();
 
-        toast.success('Transaction deleted successfully!', {
+        toast.success('Invoice deleted successfully!', {
             duration: 4000,
             position: 'top-center',
         });
     } catch (error) {
-        toast.error('Failed to delete transaction', {
+        toast.error('Failed to delete invoice', {
             duration: 4000,
             position: 'top-center',
         });

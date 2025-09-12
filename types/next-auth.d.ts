@@ -14,3 +14,11 @@ declare module "next-auth/jwt" {
     id: string;
   }
 }
+
+declare module "next-auth" {
+    interface Profile {
+        given_name?: string;
+        family_name?: string;
+    }
+}
+

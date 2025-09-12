@@ -11,9 +11,33 @@ const TableLoadingIndicator = React.forwardRef<HTMLDivElement, LoadingIndicatorP
 ));
 TableLoadingIndicator.displayName = 'TableLoadingIndicator';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto rounded-lg">
-        <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+    loading?: boolean;
+    empty?: React.ReactNode;
+    columns?: number;
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, loading, empty, columns = 1, children, ...props }, ref) => (
+    <div className="w-full overflow-auto">
+        <table ref={ref} className={cn('w-full caption-bottom text-sm rounded-lg', className)} {...props}>
+            {loading ? (
+                <tbody>
+                    <tr>
+                        <td colSpan={columns} className="p-8 text-center">
+                            <TableLoadingIndicator className="w-full h-10" />
+                        </td>
+                    </tr>
+                </tbody>
+            ) : React.Children.count(children) > 0 ? (
+                children
+            ) : (
+                <tr>
+                    <td colSpan={columns} className="text-center text-muted-foreground p-8">
+                        {empty || 'No data available'}
+                    </td>
+                </tr>
+            )}
+        </table>
     </div>
 ));
 Table.displayName = 'Table';
@@ -24,7 +48,7 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttribut
 TableHeader.displayName = 'TableHeader';
 
 const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-    ({ className, ...props }, ref) => <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
+    ({ className, ...props }, ref) => <tbody ref={ref} className={cn('[&_tr:last-child]:border-0 bg-white', className)} {...props} />
 );
 TableBody.displayName = 'TableBody';
 
@@ -38,7 +62,7 @@ TableFooter.displayName = 'TableFooter';
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(({ className, ...props }, ref) => (
     <tr
         ref={ref}
-        className={cn('h-10 border-b rounded-t-xl transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted', className)}
+        className={cn('h-10 border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted', className)}
         {...props}
     />
 ));

@@ -8,27 +8,27 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { Transaction } from '@/types';
+import type { Invoice } from '@/types';
 import { useSession } from 'next-auth/react';
-import { TransactionFormValues, TransactionSchema } from '@/zod/transaction';
+import { InvoiceFormValues, InvoiceSchema } from '@/zod/invoice';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CATEGORIES, PAYMENT_METHODS } from '@/constant';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
-interface TransactionFormProps {
-    onSubmit: (data: TransactionFormValues & { userId: string | undefined }) => void;
-    defaultValues?: Partial<Transaction>;
+interface InvoiceFormProps {
+    onSubmit: (data: InvoiceFormValues & { userId: string | undefined }) => void;
+    defaultValues?: Partial<Invoice>;
 }
 
-export function TransactionForm({ onSubmit, defaultValues }: TransactionFormProps) {
+export function InvoiceForm({ onSubmit, defaultValues }: InvoiceFormProps) {
     const { data: session } = useSession();
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date>(defaultValues?.date ? moment(defaultValues.date).toDate() : moment().toDate());
 
-    const form = useForm<TransactionFormValues>({
-        resolver: zodResolver(TransactionSchema),
+    const form = useForm<InvoiceFormValues>({
+        resolver: zodResolver(InvoiceSchema),
         defaultValues: {
             title: defaultValues?.title ?? '',
             category: defaultValues?.category ?? '',
@@ -53,7 +53,7 @@ export function TransactionForm({ onSubmit, defaultValues }: TransactionFormProp
         <form onSubmit={handleSubmit((data) => onSubmit({ ...data, userId: session?.user?.id }))} className="space-y-4 px-4 mt-6">
             {/* Type */}
             <div className="flex flex-col gap-2">
-                <Label>Transaction Type</Label>
+                <Label>Invoice Type</Label>
                 <RadioGroup
                     className="flex items-center !justify-between gap-4"
                     onValueChange={(val: string) => setValue('type', val as 'income' | 'expense')}

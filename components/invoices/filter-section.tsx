@@ -3,11 +3,11 @@
 import { CATEGORIES } from '@/constant';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Input } from '../ui/input';
-import { TransactionsTableProps } from '../overview/transactions-table';
+import { InvoicesTableProps } from '../overview/invoices-table';
 import { Button } from '../ui/button';
 import { XIcon } from 'lucide-react';
 
-export const FilterSection = ({ title, type, category, setTitle, setType, setCategory }: TransactionsTableProps) => {
+export const FilterSection = ({ title, type, category, setTitle, setType, setCategory }: InvoicesTableProps) => {
     const onReset = () => {
         setTitle('');
         setType('');
@@ -17,7 +17,7 @@ export const FilterSection = ({ title, type, category, setTitle, setType, setCat
     return (
         <div className="flex items-center">
             <div className="flex items-center gap-4">
-                <Input className="w-[320px]" placeholder="Search transaction" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <Input className="w-[320px]" placeholder="Search invoice" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Select value={type} onValueChange={setType}>
                     <SelectTrigger className="w-[200px]">
                         <SelectValue placeholder="Select type" />

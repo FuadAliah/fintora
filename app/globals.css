@@ -4,105 +4,69 @@
 
 /* Use your custom font */
 body {
-  font-family: var(--font-rubik);
-  background-color: #f6f7f9;
+    font-family: var(--font-rubik);
+    background-color: #f6f7f9;
 }
 
 *:focus-visible {
-    outline: 0
+    outline: 0;
 }
 
 /* Optional text wrap utility */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
+
+:root {
+    --radius: 0.5rem;
+
+    /* === colors defined directly in oklch() === */
+    --color-secondary-dark: 0.2367 0.0239 270.2;
+    --color-background: 1 0 0;
+    --color-foreground: 0.141 0.005 285.823;
+    --color-card: 1 0 0;
+    --color-card-foreground: 0.141 0.005 285.823;
+    --color-popover: 1 0 0;
+    --color-popover-foreground: 0.141 0.005 285.823;
+    --color-primary: 0.75 0.14 233;
+    --color-primary-foreground: 0.982 0.018 155.826;
+    --color-secondary: 0.967 0.001 286.375;
+    --color-secondary-foreground: 0.21 0.006 285.885;
+    --color-muted: 0.967 0.001 286.375;
+    --color-muted-foreground: 0.552 0.016 285.938;
+    --color-accent: 0.967 0.001 286.375;
+    --color-accent-foreground: 0.21 0.006 285.885;
+    --color-destructive: 0.577 0.245 27.325;
+    --color-border: 0.92 0.004 286.32;
+    --color-input: 0.92 0.004 286.32;
+    --color-ring: 0.723 0.219 149.579;
+    --color-chart-1: 0.646 0.222 41.116;
+    --color-chart-2: 0.6 0.118 184.704;
+    --color-chart-3: 0.398 0.07 227.392;
+    --color-chart-4: 0.828 0.189 84.429;
+    --color-chart-5: 0.769 0.188 70.08;
+    --color-sidebar: 0.985 0 0;
+    --color-sidebar-foreground: 0.141 0.005 285.823;
+    --color-sidebar-primary: 0.723 0.219 149.579;
+    --color-sidebar-primary-foreground: 0.982 0.018 155.826;
+    --color-sidebar-accent: 0.967 0.001 286.375;
+    --color-sidebar-accent-foreground: 0.21 0.006 285.885;
+    --color-sidebar-border: 0.92 0.004 286.32;
+    --color-sidebar-ring: 0.723 0.219 149.579;
+    --color-card-1: 0.96 0.04 203;
+    --color-card-2: 0.96 0.04 157;
+    --color-card-3: 0.94 0.03 18;
+    --color-card-4: 0.95 0.04 75;
+}
+
 @layer base {
-  :root {
-    --radius: 0.4rem;
+    * {
+        @apply border-border;
+    }
 
-    --background: 1 0 0;
-    --foreground: 0.141 0.005 285.823;
-
-    --card: 1 0 0;
-    --card-foreground: 0.141 0.005 285.823;
-
-    --popover: 1 0 0;
-    --popover-foreground: 0.141 0.005 285.823;
-
-    --primary: 0.623 0.214 259.815;
-    --primary-foreground: 0.97 0.014 254.604;
-
-    --secondary: 0.967 0.001 286.375;
-    --secondary-foreground: 0.21 0.006 285.885;
-
-    --muted: 0.967 0.001 286.375;
-    --muted-foreground: 0.552 0.016 285.938;
-
-    --accent: 0.967 0.001 286.375;
-    --accent-foreground: 0.21 0.006 285.885;
-
-    --destructive: 0.577 0.245 27.325;
-    --destructive-foreground: 1 0 0;
-
-    --border: 0.92 0.004 286.32;
-    --input: 0.92 0.004 286.32;
-    --ring: 0.623 0.214 259.815;
-
-    /* Custom values */
-    --secondary-dark-color: #1a1e2a;
-
-    /* Charts or extended theming */
-    --chart-1: 0.646 0.222 41.116;
-    --chart-2: 0.6 0.118 184.704;
-    --chart-3: 0.398 0.07 227.392;
-    --chart-4: 0.828 0.189 84.429;
-    --chart-5: 0.769 0.188 70.08;
-  }
-
-  .dark {
-    --background: 0.141 0.005 285.823;
-    --foreground: 0.985 0 0;
-
-    --card: 0.21 0.006 285.885;
-    --card-foreground: 0.985 0 0;
-
-    --popover: 0.21 0.006 285.885;
-    --popover-foreground: 0.985 0 0;
-
-    --primary: 0.546 0.245 262.881;
-    --primary-foreground: 0.379 0.146 265.522;
-
-    --secondary: 0.274 0.006 286.033;
-    --secondary-foreground: 0.985 0 0;
-
-    --muted: 0.274 0.006 286.033;
-    --muted-foreground: 0.705 0.015 286.067;
-
-    --accent: 0.274 0.006 286.033;
-    --accent-foreground: 0.985 0 0;
-
-    --destructive: 0.704 0.191 22.216;
-    --destructive-foreground: 1 0 0;
-
-    --border: 1 0 0 / 10%;
-    --input: 1 0 0 / 15%;
-    --ring: 0.488 0.243 264.376;
-
-    /* Charts */
-    --chart-1: 0.488 0.243 264.376;
-    --chart-2: 0.696 0.17 162.48;
-    --chart-3: 0.769 0.188 70.08;
-    --chart-4: 0.627 0.265 303.9;
-    --chart-5: 0.645 0.246 16.439;
-  }
-  /* Reset default styles and apply base */
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
+    body {
+        @apply bg-background text-foreground;
+    }
 }

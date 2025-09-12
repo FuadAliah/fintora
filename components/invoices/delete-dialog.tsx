@@ -1,22 +1,22 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Transaction } from '@/types';
+import { Invoice } from '@/types';
 
 type DeleteDialogProps = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     handleDelete: () => void;
-    transaction: Transaction;
+    invoice: Invoice;
 };
 
-export function DeleteDialog({ open, onOpenChange, handleDelete, transaction }: DeleteDialogProps) {
+export function DeleteDialog({ open, onOpenChange, handleDelete, invoice }: DeleteDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Delete</DialogTitle>
                     <DialogDescription>
-                        Are you sure you would to delete <span className="text-red-500 font-bold">{transaction.title}</span> transaction?
+                        Are you sure you would to delete <span className="text-red-500 font-bold">{invoice.title}</span> invoice?
                     </DialogDescription>
                 </DialogHeader>
 

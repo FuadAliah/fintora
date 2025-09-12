@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
     ],
 
     callbacks: {
-        async signIn({ user }) {
+        async signIn({ user, profile }) {
             if (!user.email) return false;
 
             const existingUser = await prisma.user.findUnique({
@@ -24,9 +24,15 @@ export const authOptions: AuthOptions = {
                 await prisma.user.create({
                     data: {
                         id: user.id,
-                        name: user.name,
+                        firstName: profile?.given_name || '',
+                        lastName: profile?.family_name || '',
                         email: user.email,
                         image: user.image,
+                        role: 'user',
+                        tempPassword: '',
+                        mobileNumber: '',
+                        defaultLanguage: 'en',
+                        isActive: false,
                     },
                 });
             }
