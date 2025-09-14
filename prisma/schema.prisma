@@ -139,21 +139,25 @@ enum InvoiceType {
 // }
 
 model User {
-    id              String   @id @default(cuid())
-    firstName       String   @default("")
-    lastName        String   @default("")
-    email           String   @unique
-    image           String?
-    role            UserRole @default(user)
-    tempPassword    String   @default("")
+    id        String   @id @default(cuid())
+    firstName String   @default("")
+    lastName  String   @default("")
+    email     String   @unique
+    image     String?
+    role      UserRole @default(user)
+
+    // Authentication
+    passwordHash        String // store hashed password here
+    tempPassword        String? // store temp password (hashed as well, never plain)
+    forcePasswordChange Boolean @default(true) // user must change temp password before isActive = true
+    isActive            Boolean @default(false)
+
     mobileNumber    String   @default("")
     defaultLanguage Language @default(en)
-    isActive        Boolean  @default(false)
 
-    invoiceId String?
-    invoices  Invoice[]
-
-    // department relations
+    // Relations
+    invoiceId    String?
+    invoices     Invoice[]
     departmentId String?
     department   Department? @relation(fields: [departmentId], references: [id])
 

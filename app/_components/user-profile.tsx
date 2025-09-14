@@ -1,5 +1,5 @@
 'use client';
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Routes } from '@/utils/routes';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { LogOutIcon } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -20,19 +19,26 @@ export function UserProfile() {
     const { data: session } = useSession();
     const router = useRouter();
 
+    const firstLetters = (name: string) => {
+        return name.split(' ')[0].charAt(0) + name.split(' ')[1].charAt(0);
+    };
+
+    console.log('session', session);
+
     if (session) {
         return (
             <div className="w-32 flex justify-end">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild className="cursor-pointer">
                         <Avatar>
-                            <Image
+                            <AvatarImage
                                 src={session?.user?.image ?? ''}
                                 alt={session.user?.name ?? ''}
                                 width={40}
                                 height={40}
                                 className="rounded-full"
                             />
+                            <AvatarFallback className="font-semibold">{firstLetters(session.user?.name)}</AvatarFallback>
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 p-1 mt-2 bg-white rounded-md" align="end">

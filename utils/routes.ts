@@ -5,11 +5,21 @@ export const Routes = {
     HOME: '/',
 
     // Dashboard
-    OVERVIEW: { label: 'Overview', icon: House, url: '/dashboard/overview' },
-    USERMANAGE: { label: 'User Management', icon: Users, url: '/dashboard/users' },
-    CUSTOMERS: { label: 'Customers', icon: UsersRound, url: '/dashboard/customers' },
-    INVOICES: { label: 'Invoices', icon: NotepadText, url: '/dashboard/invoices' },
-    PRODUCTS: { label: 'Products', icon: Package2, url: '/dashboard/products' },
-    REPORTS: { label: 'Reports', icon: ChartPie, url: '/dashboard/reports' },
-    SETTINGS: { label: 'Settings', icon: Settings, url: '/dashboard/settings' },
+    OVERVIEW: { label: 'Overview', icon: House, url: '/dashboard/overview', children: null },
+    USERMANAGE: { label: 'User Management', icon: Users, url: '/dashboard/users', children: null },
+    CUSTOMERS: { label: 'Customers', icon: UsersRound, url: '/dashboard/customers', children: null },
+    INVOICES: {
+        label: 'Invoices',
+        icon: NotepadText,
+        url: '/dashboard/invoices',
+        children: [{ label: 'Outcome', url: '/dashboard/invoices/outcome' }],
+    },
+    PRODUCTS: { label: 'Products', icon: Package2, url: '/dashboard/products', children: null },
+    REPORTS: { label: 'Reports', icon: ChartPie, url: '/dashboard/reports', children: null },
+    SETTINGS: { label: 'Settings', icon: Settings, url: '/dashboard/settings', children: null },
+};
+
+export const AuthRoutes = {
+    LOGIN: '/login',
+    RESET_PASSWORD: '/auth/reset-password',
 };

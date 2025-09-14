@@ -19,12 +19,12 @@ export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTab
     const { data: session } = useSession();
 
     const [username, setUsername] = useState('');
-    const [users, setUsers] = useState<User[]>([]);
+    const [data, setData] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(pageSizeParam);
-    const [totalUsers, setTotalUsers] = useState<number>(0);
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(0);
 
     const onPageChange = (current: number) => {
@@ -44,31 +44,31 @@ export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTab
 
     const usersColumns = UsersColumns(handleView, handleDelete);
 
+    const fetchUsers = async () => {
+        try {
+            setLoading(true);
+            const query = new URLSearchParams({
+                page: currentPage.toString(),
+                pageSize: pageSize.toString(),
+                ...(username && { firstName: username }),
+            });
+
+            const res = await fetch(`/api/users?${query.toString()}`);
+
+            const data = await res.json();
+            setData(data.data || []);
+            setTotalPages(data?.totalPages);
+            setTotalCount(data.totalUsers || 0);
+        } catch (err) {
+            const message = err instanceof Error ? err?.message : String(err);
+            toast.error(message, { duration: 4000, position: 'top-center' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (!session) return;
-
-        const fetchUsers = async () => {
-            try {
-                setLoading(true);
-                const query = new URLSearchParams({
-                    page: currentPage.toString(),
-                    pageSize: pageSize.toString(),
-                    ...(username?.length >= 3 && { firstName: username }),
-                });
-
-                const res = await fetch(`/api/users?${query.toString()}`);
-
-                const data = await res.json();
-                setUsers(data.data || []);
-                setTotalPages(data?.totalPages);
-                setTotalUsers(data.totalUsers || 0);
-            } catch (err) {
-                const message = err instanceof Error ? err?.message : String(err);
-                toast.error(message, { duration: 4000, position: 'top-center' });
-            } finally {
-                setLoading(false);
-            }
-        };
 
         fetchUsers();
     }, [session, currentPage, pageSize, username]);
@@ -87,8 +87,8 @@ export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTab
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.length ? (
-                        users.map((user: User) => (
+                    {data.length ? (
+                        data.map((user: User) => (
                             <TableRow key={user.id}>
                                 {usersColumns.map((col) => (
                                     <TableCell key={col.accessor}>{col.cell({ row: user })}</TableCell>
@@ -111,7 +111,7 @@ export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTab
                                 <DataTablePagination
                                     pageNumber={currentPage}
                                     pageSize={pageSize}
-                                    totalCount={totalUsers}
+                                    totalCount={totalCount}
                                     totalPages={totalPages}
                                     onPageChange={onPageChange}
                                     onPageSizeChange={onPageSizeChange}
