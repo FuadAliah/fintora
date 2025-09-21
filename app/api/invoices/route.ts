@@ -1,48 +1,29 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { InvoiceStatus, InvoiceType, PaymentStatus, Prisma } from '@prisma/client';
+import { InvoiceStatus, PaymentType, Prisma } from '@prisma/client';
 import moment from 'moment';
 import { z } from 'zod';
 
 const paramSchema = z.object({
     invoiceNumber: z.string().optional(),
     customerId: z.string().optional(),
-    status: z.enum(InvoiceStatus).optional(),
-    type: z.enum(InvoiceType).optional(),
-    paymentStatus: z.enum(PaymentStatus).optional(),
-    startDate: z
-        .string()
-        .refine((val) => moment(val).isValid(), { message: 'startDate must be a valid date' })
-        .optional(),
-    endDate: z
-        .string()
-        .refine((val) => moment(val).isValid(), { message: 'endDate must be a valid date' })
-        .optional(),
+    invoiceStatus: z.enum(InvoiceStatus).optional(),
+    paymentType: z.enum(PaymentType).optional(),
+    products: z.string().optional(),
     currentPage: z.coerce.number().int().min(1).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(10),
-    sort: z.string().optional().default('issueDate'),
-    order: z.string().optional().default('desc'),
+    sort: z.string().default('createdAt'), // optional().default() مش ضروري
+    order: z.enum(['asc', 'desc']).default('desc'), // أحسن بدل string عادية
 });
 
+type ProductType = { productId: string; productPrice: number; quantity: number };
+
 function buildWhere(params: z.infer<typeof paramSchema>): Prisma.InvoiceWhereInput {
-    const { invoiceNumber, type, status, paymentStatus, startDate, endDate } = params;
+    const { invoiceNumber } = params;
 
     const where: Prisma.InvoiceWhereInput = {
         ...(invoiceNumber && { invoiceNumber: { contains: invoiceNumber } }),
-        ...(type && { type: { equals: type } }),
-        ...(status && { status: { equals: status } }),
-        ...(paymentStatus && { paymentStatus: { equals: paymentStatus } }),
     };
-
-    if (startDate || endDate) {
-        where.issueDate = {};
-        if (startDate) {
-            where.issueDate.gte = moment.utc(startDate).toISOString();
-        }
-        if (endDate) {
-            where.issueDate.lte = moment.utc(endDate).endOf('day').toISOString();
-        }
-    }
 
     return where;
 }
@@ -58,7 +39,19 @@ export async function GET(req: Request) {
         const take = pageSize;
 
         const [data, totalData] = await Promise.all([
-            prisma.invoice.findMany({ where, orderBy: { [sort]: order }, skip, take }),
+            prisma.invoice.findMany({
+                where,
+                orderBy: { [sort]: order },
+                skip,
+                take,
+                include: {
+                    products: {
+                        include: {
+                            product: true, // يرجع تفاصيل المنتج المرتبط
+                        },
+                    },
+                },
+            }),
             prisma.invoice.count({ where }),
         ]);
 
@@ -80,28 +73,62 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { userId, type, status, paymentStatus, subtotal, tax, total, description } = body;
+        const { userId, customerId, paymentType, invoiceStatus, description, products } = body;
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
-        if (!type || !status || !paymentStatus || !subtotal || !tax || !total || !description) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        }
+        const productsDB = await prisma.product.findMany({
+            where: {
+                id: {
+                    in: body.products.map((product: ProductType) => product.productId),
+                },
+            },
+        });
+
+        const subTotal = products.reduce((sum: number, p: ProductType) => sum + Number(p.productPrice) * Number(p.quantity), 0);
+        const tax = products.reduce((sum: number, p: ProductType) => {
+            const foundProduct = productsDB.find((prod) => prod.id === p.productId);
+            return sum + Number(p.productPrice) * Number(p.quantity) * Number(foundProduct?.tax);
+        }, 0);
+        const total = subTotal + tax;
 
         const invoice = await prisma.invoice.create({
             data: {
                 invoiceNumber: `INV-${(await prisma.invoice.count()) + 130 + 1}`,
-                type,
-                status,
-                paymentStatus,
-                subtotal,
-                tax: tax || 0,
-                total,
+                createdById: userId,
+                paymentType,
+                invoiceStatus,
                 description,
+
+                ...(customerId ? { customer: { connect: { id: customerId } } } : {}),
+
+                subTotal,
+                tax,
+                total,
+
                 dueDate: moment().add(30, 'days').utc().toISOString(),
-                createdBy: { connect: { id: userId } },
+
+                products: {
+                    create: products.map((pro: ProductType) => {
+                        const foundProduct = productsDB.find((p) => p.id === pro.productId) || { unitPrice: 0, tax: 0 };
+                        const productPrice = pro.productPrice ?? foundProduct.unitPrice; // total price of the product without tax
+                        const productTax = productPrice * +foundProduct?.tax; // tax of the product
+                        const totalPrice = productPrice + productTax; // total price of the product including tax
+                        return {
+                            product: { connect: { id: pro.productId } },
+                            quantity: pro.quantity,
+                            productPrice,
+                            productTax,
+                            totalPrice,
+                        };
+                    }),
+                },
+            },
+            include: {
+                createdBy: true,
+                products: { include: { product: true } },
             },
         });
 
@@ -171,10 +198,16 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: 'Invoice ID is required' }, { status: 400 });
         }
 
-        const invoice = await prisma.invoice.delete({
-            where: {
-                id: id,
-            },
+        const invoice = await prisma.invoice.findUnique({
+            where: { id },
+        });
+
+        if (!invoice) {
+            throw new Error('Invoice not found');
+        }
+
+        await prisma.invoice.delete({
+            where: { id },
         });
 
         return NextResponse.json(invoice, { status: 200 });

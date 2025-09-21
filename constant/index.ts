@@ -26,11 +26,9 @@ export const PAYMENT_METHODS_ENUM = {
 } as const;
 
 export const PAYMENT_METHODS = [
-    { value: PAYMENT_METHODS_ENUM.CARD, label: 'Credit/Debit Card' },
+    { value: PAYMENT_METHODS_ENUM.CARD, label: 'Credit Card' },
     { value: PAYMENT_METHODS_ENUM.CASH, label: 'Cash' },
     { value: PAYMENT_METHODS_ENUM.BANK_TRANSFER, label: 'Bank Transfer' },
-    { value: PAYMENT_METHODS_ENUM.MOBILE_PAYMENT, label: 'Mobile Payment' },
-    { value: PAYMENT_METHODS_ENUM.AUTO_DEBIT, label: 'Auto Debit' },
     { value: PAYMENT_METHODS_ENUM.OTHER, label: 'Other' },
 ];
 

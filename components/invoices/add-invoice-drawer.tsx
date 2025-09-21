@@ -12,7 +12,7 @@ export const AddInvoiceDrawer = () => {
 
     const onCloseDrawer = async (data: InvoiceFormValues) => {
         try {
-            const res = await fetch('/api/invoice', {
+            const res = await fetch('/api/invoices', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -40,7 +40,7 @@ export const AddInvoiceDrawer = () => {
                     Add Invoice
                 </Button>
             </DrawerTrigger>
-            <DrawerContent className="!max-w-md overflow-hidden overflow-y-auto">
+            <DrawerContent className="overflow-hidden overflow-y-auto">
                 <DrawerHeader className="relative">
                     <div>
                         <DrawerTitle className="text-xl font-semibold">Add Invoice</DrawerTitle>

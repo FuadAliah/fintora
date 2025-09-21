@@ -11,8 +11,8 @@ import { Routes } from '@/utils/routes';
 export default function LoginPage() {
     const router = useRouter();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('fuad@example.com');
+    const [password, setPassword] = useState('Fuad@123');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -26,10 +26,10 @@ export default function LoginPage() {
 
         if (res?.error) {
             setError('An error occurred during login. Please check your credentials and try again.');
-            console.log('res=', res);
+            console.log('res', res);
         }
 
-        router.push(Routes.OVERVIEW.url);
+        router.replace(Routes.OVERVIEW.url);
     };
 
     // const handleGoogleLogin = async () => {

@@ -16,7 +16,7 @@ export async function POST(req: Request) {
             where: { email },
             data: {
                 passwordHash: newHash,
-                tempPassword: null,
+                tempPassword: "",
                 forcePasswordChange: false,
                 isActive: true,
             },

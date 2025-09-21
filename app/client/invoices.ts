@@ -65,7 +65,7 @@ export async function fetchInvoices({
         ...(order && { order }),
     });
 
-    const res = await fetch(`/api/invoice?${query.toString()}`, {
+    const res = await fetch(`/api/invoices?${query.toString()}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
