@@ -1,77 +1,45 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
-import { DataTablePagination } from '../ui/pagination';
+import { DataTablePagination } from '../../ui/pagination';
 import { UsersFilter } from './users-filter';
-import { UsersColumns } from './users-columns';
 import { User } from '@/types/user';
-import { toast } from 'sonner';
+import { UsersColumns } from './users-columns';
 
 type UsersTableProps = {
-    pageSizeParam?: number;
+    data: User[];
+    loading: boolean;
+    username: string;
+    
+    pageSize?: number;
     isPagination?: boolean;
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    onPageChange: (page: number) => void;
+    onPageSizeChange: (pageSize: number) => void;
+    setUsername: (username: string) => void;
+    handleView: (user: User) => void;
+    handleDelete: (user: User) => void;
 };
 
-export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTableProps) {
-    const { data: session } = useSession();
-
-    const [username, setUsername] = useState('');
-    const [data, setData] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(pageSizeParam);
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [totalPages, setTotalPages] = useState<number>(0);
-
-    const onPageChange = (current: number) => {
-        setCurrentPage(current);
-    };
-
-    const onPageSizeChange = (size: number) => {
-        setPageSize(size);
-    };
-    const handleView = (user: User) => {
-        console.log('Viewing user:', user);
-    };
-
-    const handleDelete = (user: User) => {
-        console.log('Deleting user:', user);
-    };
-
+export function UsersTable({
+    pageSize = 10,
+    isPagination = true,
+    data,
+    loading,
+    currentPage,
+    totalPages,
+    totalCount,
+    onPageChange,
+    onPageSizeChange,
+    username,
+    setUsername,
+    handleView,
+    handleDelete,
+}: UsersTableProps) {
     const usersColumns = UsersColumns(handleView, handleDelete);
-
-    const fetchUsers = async () => {
-        try {
-            setLoading(true);
-            const query = new URLSearchParams({
-                page: currentPage.toString(),
-                pageSize: pageSize.toString(),
-                ...(username && { firstName: username }),
-            });
-
-            const res = await fetch(`/api/users?${query.toString()}`);
-
-            const data = await res.json();
-            setData(data.data || []);
-            setTotalPages(data?.totalPages);
-            setTotalCount(data.totalUsers || 0);
-        } catch (err) {
-            const message = err instanceof Error ? err?.message : String(err);
-            toast.error(message, { duration: 4000, position: 'top-center' });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (!session) return;
-
-        fetchUsers();
-    }, [session, currentPage, pageSize, username]);
 
     return (
         <Card className="border-0">
@@ -86,6 +54,7 @@ export function UsersTable({ pageSizeParam = 10, isPagination = true }: UsersTab
                         ))}
                     </TableRow>
                 </TableHeader>
+                
                 <TableBody>
                     {data.length ? (
                         data.map((user: User) => (

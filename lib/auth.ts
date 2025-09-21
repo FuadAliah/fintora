@@ -37,7 +37,6 @@ export const authOptions: AuthOptions = {
                         id: user.id,
                         email: user.email,
                         name: `${user.firstName} ${user.lastName}`,
-                        role: user.role,
                         forcePasswordChange: true,
                     };
                 }
@@ -52,7 +51,6 @@ export const authOptions: AuthOptions = {
                     id: user.id,
                     email: user.email,
                     name: `${user.firstName} ${user.lastName}`,
-                    role: user.role,
                     forcePasswordChange: false,
                 };
             },
@@ -60,38 +58,11 @@ export const authOptions: AuthOptions = {
     ],
 
     callbacks: {
-        // async signIn({ user, profile }) {
-        //     if (!user.email) return false;
-
-        //     const existingUser = await prisma.user.findUnique({
-        //         where: { email: user.email },
-        //     });
-
-        //     if (!existingUser) {
-        //         await prisma.user.create({
-        //             data: {
-        //                 id: user.id,
-        //                 firstName: profile?.given_name || '',
-        //                 lastName: profile?.family_name || '',
-        //                 email: user.email,
-        //                 image: user.image,
-        //                 role: 'user',
-        //                 tempPassword: '',
-        //                 mobileNumber: '',
-        //                 defaultLanguage: 'en',
-        //                 isActive: false,
-        //             },
-        //         });
-        //     }
-
-        //     return true;
-        // },
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.role = user.role;
-                token.forcePasswordChange = user.forcePasswordChange;
                 token.name = user.name;
+                token.forcePasswordChange = user.forcePasswordChange;
             }
             return token;
         },
@@ -99,9 +70,8 @@ export const authOptions: AuthOptions = {
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string;
-                session.user.role = token.role as string;
+                session.user.username = token.name as string; // 👈 add this
                 session.user.forcePasswordChange = token.forcePasswordChange as boolean;
-                session.user.name = token.name as string; // 👈 add this
             }
             return session;
         },

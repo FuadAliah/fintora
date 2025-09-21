@@ -1,5 +1,5 @@
 import { Invoice } from '@/types';
-import { Ellipsis, TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
+import { Ellipsis } from 'lucide-react';
 import moment from 'moment';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
@@ -8,54 +8,39 @@ export const InvoicesColumns = (handleView: (invoice: Invoice) => void, handleDe
     {
         header: 'Invoice Date',
         accessor: 'date',
-        cell: ({ row }: { row: Invoice }) => moment(row.date).format('DD MMM YYYY'),
+        cell: ({ row }: { row: Invoice }) => moment(row.createdAt).format('DD MMM YYYY'),
         sortable: true,
     },
     {
-        header: 'Title',
-        accessor: 'title',
-        cell: ({ row }: { row: Invoice }) => row.title,
+        header: 'Inv. Number.',
+        accessor: 'invoiceNumber',
+        cell: ({ row }: { row: Invoice }) => row.invoiceNumber,
         sortable: true,
     },
     {
-        header: 'Category',
-        accessor: 'category',
-        cell: ({ row }: { row: Invoice }) => row.category,
+        header: 'Eng. Name',
+        accessor: 'englishName',
+        cell: ({ row }: { row: Invoice }) => row.englishName,
     },
     {
-        header: 'Amount',
-        accessor: 'amount',
-        cell: ({ row }: { row: Invoice }) =>
-            row.type === 'income' ? (
-                <div className="text-green-500 flex items-center gap-2">
-                    <TrendingUpIcon size={16} />
-                    <span>${Number(row.amount).toFixed(2)}</span>
-                </div>
-            ) : (
-                <div className="text-red-500 flex items-center gap-2">
-                    <TrendingDownIcon size={16} />
-                    <span>${Number(row.amount).toFixed(2)}</span>
-                </div>
-            ),
-        sortable: true,
+        header: 'Payment Type',
+        accessor: 'paymentType',
+        cell: ({ row }: { row: Invoice }) => row.paymentType,
     },
     {
-        header: 'Type',
-        accessor: 'type',
-        cell: ({ row }: { row: Invoice }) => (
-            <span
-                className={`capitalize text-xs rounded-full px-3 py-1
-          ${row.type === 'income' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}
-            >
-                {row.type}
-            </span>
-        ),
-        sortable: true,
+        header: 'Status',
+        accessor: 'status',
+        cell: ({ row }: { row: Invoice }) => row.status,
+    },
+    {
+        header: 'Total',
+        accessor: 'total',
+        cell: ({ row }: { row: Invoice }) => <span>${Number(row.total).toFixed(2)}</span>,
     },
     {
         header: 'Description',
         accessor: 'description',
-        cell: ({ row }: { row: Invoice }) => row.description,
+        cell: ({ row }: { row: Invoice }) => <p className="truncate w-40 overflow-hidden text-ellipsis">{row.description}</p>,
     },
     {
         header: 'Actions',

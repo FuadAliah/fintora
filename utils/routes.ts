@@ -6,7 +6,11 @@ export const Routes = {
 
     // Dashboard
     OVERVIEW: { label: 'Overview', icon: House, url: '/dashboard/overview', children: null },
-    USERMANAGE: { label: 'User Management', icon: Users, url: '/dashboard/users', children: null },
+    USERMANAGE: { label: 'User Management', icon: Users, url: '/dashboard/user-management', children: [
+        { label: 'Users', url: '/dashboard/user-management/users' },
+        { label: 'Roles', url: '/dashboard/user-management/roles' },
+        { label: 'Groups', url: '/dashboard/user-management/groups' },
+    ] },
     CUSTOMERS: { label: 'Customers', icon: UsersRound, url: '/dashboard/customers', children: null },
     INVOICES: {
         label: 'Invoices',

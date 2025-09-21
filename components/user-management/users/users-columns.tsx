@@ -1,9 +1,9 @@
-import { User } from '@/types/user';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
+import { Column, User } from '@/types/user';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
 import { Ellipsis } from 'lucide-react';
 
-export function UsersColumns(onView: (user: User) => void, onDelete: (user: User) => void) {
+export function UsersColumns(onView: (user: User) => void, onDelete: (user: User) => void): Column<User>[] {
     return [
         {
             accessor: 'firstName',
@@ -30,19 +30,14 @@ export function UsersColumns(onView: (user: User) => void, onDelete: (user: User
             cell: ({ row }: { row: User }) => <span>{row.email}</span>,
         },
         {
-            accessor: 'role',
-            header: 'Role',
-            cell: ({ row }: { row: User }) => <span>{row.role.toUpperCase()}</span>,
-        },
-        {
             accessor: 'isActive',
             header: 'Activated',
             cell: ({ row }: { row: User }) => (
                 <span
                     className={`capitalize text-xs rounded-full px-3 py-1
-                    ${row.isActive ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}
+                    ${row.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
                 >
-                    {row.isActive ? 'Activated' : 'Not Activated'}
+                    {row.isActive ? 'Activated' : 'Not Active'}
                 </span>
             ),
         },

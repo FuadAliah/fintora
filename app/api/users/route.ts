@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         const data = paramSchema.parse(body);
-        const { firstName, lastName, email, role, tempPassword } = data;
+        const { firstName, lastName, email, mobileNumber, tempPassword } = data;
 
         if (!email || !tempPassword) {
             return NextResponse.json({ error: 'Email and tempPassword are required' }, { status: 400 });
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
                 firstName: firstName || '',
                 lastName: lastName || '',
                 email,
-                role: role as 'admin' | 'user',
+                mobileNumber: mobileNumber || '',
                 passwordHash: hashedTempPassword,
                 tempPassword: hashedTempPassword,
                 forcePasswordChange: true,
@@ -91,5 +91,26 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'User created successfully', user }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: `Internal Server Error ${error}` }, { status: 500 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+        }
+
+        const user = await prisma.user.delete({
+            where: {
+                id: id,
+            },
+        });
+
+        return NextResponse.json(user, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: `Failed to delete user ${error}` }, { status: 500 });
     }
 }
