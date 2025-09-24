@@ -44,109 +44,30 @@ enum PaymentType {
     OTHER
 }
 
-// model Address {
-//     id             String  @id @default(cuid())
-//     country        String
-//     city           String
-//     street         String
-//     buildingNumber String?
-//     area           String?
-//     plotID         String?
-//     postalCode     String?
-
-//     customerId String
-//     customer   Customer @relation(fields: [customerId], references: [id])
-
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-// }
-
-// model Customer {
-//     id                   String             @id @default(cuid())
-//     customerType         CustomerType
-//     englishName          String
-//     arabicName           String
-//     mobileNumber         String
-//     emailNotification    Boolean
-//     email                String             @unique
-//     ccEmail              String?
-//     taxNumber            String
-//     isActive             Boolean
-//     identificationType   IdentificationType
-//     identificationNumber String
-//     contactPerson        String?
-
-//     addresses Address[]
-//     invoices  Invoice[]
-//     reports   Report[]
-
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-
-//     @@index([email])
-//     @@index([taxNumber])
-// }
-
-// model Category {
-//     id          String  @id @default(cuid())
-//     name        String
-//     description String?
-
-//     products Product[]
-
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-// }
-
-// model Product {
-//     id          String  @id @default(cuid())
-//     englishName String
-//     arabicName  String
-//     basePrice   Decimal
-//     taxRate     Decimal
-//     description String?
-//     isActive    Boolean
-
-//     categoryId   String?
-//     category     Category?        @relation(fields: [categoryId], references: [id])
-//     pricings     ProductPricing[]
-//     invoiceItems InvoiceItem[]
-
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-// }
-
-// model ProductPricing {
-//     id        String    @id @default(cuid())
-//     price     Decimal
-//     startDate DateTime
-//     endDate   DateTime?
-
-//     productId String
-//     product   Product @relation(fields: [productId], references: [id])
-
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-// }
+enum UserStatus {
+    ACTIVE
+    DEACTIVE
+    PENDING
+}
 
 model User {
-    id              String   @id @default(cuid())
+    id              String     @id @default(cuid())
     firstName       String
     lastName        String
-    email           String   @unique
+    email           String     @unique
     image           String?
     mobileNumber    String
-    defaultLanguage Language @default(EN)
+    defaultLanguage Language   @default(EN)
+    status          UserStatus @default(PENDING)
 
     // Authentication
     passwordHash        String // store hashed password here
     tempPassword        String // store temp password (hashed as well, never plain)
     forcePasswordChange Boolean @default(true) // user must change temp password before isActive = true
-    isActive            Boolean @default(false)
 
     // Relations
-    invoices Invoice[]
-    groups   Group[]
+    // invoices Invoice[]
+    groups Group[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -166,75 +87,75 @@ model Group {
     updatedAt DateTime @updatedAt
 }
 
-model Invoice {
-    id            String @id @default(cuid())
-    invoiceNumber String @unique
+// model Invoice {
+//     id            String @id @default(cuid())
+//     invoiceNumber String @unique
 
-    paymentType   PaymentType
-    invoiceStatus InvoiceStatus
+//     paymentType   PaymentType
+//     invoiceStatus InvoiceStatus
 
-    subTotal Decimal @default(0) @db.Decimal(10, 3)
-    tax      Decimal @default(0) @db.Decimal(10, 3)
-    total    Decimal @default(0) @db.Decimal(10, 3)
+//     subTotal Decimal @default(0) @db.Decimal(10, 3)
+//     tax      Decimal @default(0) @db.Decimal(10, 3)
+//     total    Decimal @default(0) @db.Decimal(10, 3)
 
-    dueDate     DateTime @default(dbgenerated("CURRENT_DATE + INTERVAL '7 days'"))
-    description String?
+//     dueDate     DateTime @default(dbgenerated("CURRENT_DATE + INTERVAL '7 days'"))
+//     description String?
 
-    // user relation
-    createdById String?
-    createdBy   User?   @relation(fields: [createdById], references: [id])
+//     // user relation
+//     createdById String?
+//     createdBy   User?   @relation(fields: [createdById], references: [id])
 
-    // customer relation
-    customerId String?
-    customer   Customer? @relation(fields: [customerId], references: [id])
+//     // customer relation
+//     customerId String?
+//     customer   Customer? @relation(fields: [customerId], references: [id])
 
-    products ProductOnInvoice[]
+//     products ProductOnInvoice[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
 
-model Product {
-    id          String  @id @default(cuid())
-    englishName String
-    arabicName  String
-    description String?
-    unitPrice   Decimal @db.Decimal(10, 3)
-    tax         Decimal @db.Decimal(10, 3)
+// model Product {
+//     id          String  @id @default(cuid())
+//     englishName String
+//     arabicName  String
+//     description String?
+//     unitPrice   Decimal @db.Decimal(10, 3)
+//     tax         Decimal @db.Decimal(10, 3)
 
-    invoices ProductOnInvoice[]
+//     invoices ProductOnInvoice[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
 
-model Customer {
-    id          String @id @default(cuid())
-    englishName String
-    email       String @unique
+// model Customer {
+//     id          String @id @default(cuid())
+//     englishName String
+//     email       String @unique
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    Invoice   Invoice[]
-}
+//     createdAt DateTime  @default(now())
+//     updatedAt DateTime  @updatedAt
+//     Invoice   Invoice[]
+// }
 
-model ProductOnInvoice {
-    id String @id @default(cuid())
+// model ProductOnInvoice {
+//     id String @id @default(cuid())
 
-    quantity     Int     @default(1)
-    productPrice Decimal @default(0) @db.Decimal(10, 3) // price without tax
-    productTax   Decimal @default(0) @db.Decimal(10, 2) // tax on product
-    totalPrice   Decimal @default(0) @db.Decimal(10, 3) // total Price with tax
+//     quantity     Int     @default(1)
+//     productPrice Decimal @default(0) @db.Decimal(10, 3) // price without tax
+//     productTax   Decimal @default(0) @db.Decimal(10, 2) // tax on product
+//     totalPrice   Decimal @default(0) @db.Decimal(10, 3) // total Price with tax
 
-    Invoice   Invoice? @relation(fields: [invoiceId], references: [id])
-    invoiceId String?
+//     Invoice   Invoice? @relation(fields: [invoiceId], references: [id])
+//     invoiceId String?
 
-    product   Product? @relation(fields: [productId], references: [id])
-    productId String?
+//     product   Product? @relation(fields: [productId], references: [id])
+//     productId String?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
 
 // model Role {
 //     id          String  @id @default(cuid())

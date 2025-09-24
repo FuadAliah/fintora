@@ -16,6 +16,11 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(url);
     }
 
+    if (token?.status === 'DEACTIVE') {
+        url.pathname = AuthRoutes.LOGIN;
+        return NextResponse.redirect(url);
+    }
+
     if (token?.forcePasswordChange) {
         url.pathname = AuthRoutes.RESET_PASSWORD;
         return NextResponse.redirect(url);

@@ -2,6 +2,7 @@ import { Column, User } from '@/types/user';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
 import { Ellipsis } from 'lucide-react';
+import { UserStatus } from '@prisma/client';
 
 export function UsersColumns(onView: (user: User) => void, onDelete: (user: User) => void): Column<User>[] {
     return [
@@ -30,14 +31,14 @@ export function UsersColumns(onView: (user: User) => void, onDelete: (user: User
             cell: ({ row }: { row: User }) => <span>{row.email}</span>,
         },
         {
-            accessor: 'isActive',
-            header: 'Activated',
+            accessor: 'status',
+            header: 'Status',
             cell: ({ row }: { row: User }) => (
                 <span
                     className={`capitalize text-xs rounded-full px-3 py-1
-                    ${row.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
+                    ${row.status === UserStatus.ACTIVE ? 'bg-green-100 text-green-600' : row.status === UserStatus.DEACTIVE ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}
                 >
-                    {row.isActive ? 'Activated' : 'Not Active'}
+                    {row.status.toLowerCase()}
                 </span>
             ),
         },

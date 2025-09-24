@@ -20,7 +20,10 @@ export function UserProfile() {
     const router = useRouter();
 
     const firstLetters = (name: string) => {
-        return name.split(' ')[0].charAt(0) + name.split(' ')[1].charAt(0);
+        if (!name) {
+            return '';
+        }
+        return name?.split(' ')[0].charAt(0) + name?.split(' ')[1].charAt(0);
     };
 
     console.log('session', session);
@@ -33,17 +36,17 @@ export function UserProfile() {
                         <Avatar>
                             <AvatarImage
                                 src={session?.user?.image ?? ''}
-                                alt={session.user?.name ?? ''}
+                                alt={session.user?.username ?? ''}
                                 width={40}
                                 height={40}
                                 className="rounded-full"
                             />
-                            <AvatarFallback className="font-semibold">{firstLetters(session.user?.name)}</AvatarFallback>
+                            <AvatarFallback className="font-semibold">{firstLetters(session.user?.username ?? '')}</AvatarFallback>
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 p-1 mt-2 bg-white rounded-md" align="end">
                         <div className="px-2 pt-2">
-                            <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
+                            <DropdownMenuLabel>{session.user?.username}</DropdownMenuLabel>
                             <DropdownMenuLabel className="text-sm text-gray-600">{session.user?.email}</DropdownMenuLabel>
                         </div>
                         <DropdownMenuGroup className="mt-2 flex flex-col text-sm w-full">

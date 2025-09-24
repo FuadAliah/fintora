@@ -66,14 +66,10 @@ export default function UsersPage() {
             const res = await fetch('/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...data,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                }),
+                body: JSON.stringify({ ...data }),
             });
 
-            if (!res.ok) throw new Error('Failed to create user');
+            if (!res.ok) throw new Error(res.statusText);
 
             toast.success('User created successfully', { duration: 4000, position: 'top-center' });
         } catch (err) {
@@ -81,7 +77,7 @@ export default function UsersPage() {
             toast.error(message, { duration: 4000, position: 'top-center' });
         }
         setOpenAddDrawer(false);
-        fetchUsers()
+        fetchUsers();
     };
 
     useEffect(() => {

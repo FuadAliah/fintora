@@ -1,6 +1,8 @@
+import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { Language, Prisma } from '@prisma/client';
+import { Language, Prisma, UserStatus } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import z from 'zod';
 
@@ -51,6 +53,14 @@ function buildWhere(params: z.infer<typeof querySchema>): Prisma.UserWhereInput 
 
 export async function GET(req: Request) {
     try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) return NextResponse.json({ message: 'User Unauthorized' }, { status: 401 });
+
+        const currentUser = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (!currentUser || currentUser.status === UserStatus.DEACTIVE) {
+            return NextResponse.json({ message: 'User Unauthorized' }, { status: 401 });
+        }
+        
         const { searchParams } = new URL(req.url);
         const params = querySchema.parse(Object.fromEntries(searchParams));
         const { currentPage, pageSize, sort, order } = params;
@@ -84,12 +94,20 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) return NextResponse.json({ message: 'User Unauthorized' }, { status: 401 });
+
+        const currentUser = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (!currentUser || currentUser.status === UserStatus.DEACTIVE) {
+            return NextResponse.json({ message: 'User Unauthorized' }, { status: 401 });
+        }
+
         const body = await req.json();
         const data = createUserSchema.parse(body);
         const { firstName, lastName, email, mobileNumber, tempPassword } = data;
 
         if (!email || !tempPassword) {
-            return NextResponse.json({ error: 'Email and tempPassword are required' }, { status: 400 });
+            return NextResponse.json({ message: 'Email and tempPassword are required' }, { status: 400 });
         }
 
         // Hash the temp password before saving
@@ -104,7 +122,7 @@ export async function POST(req: Request) {
                 passwordHash: hashedTempPassword,
                 tempPassword: hashedTempPassword,
                 forcePasswordChange: true,
-                isActive: false,
+                status: UserStatus.PENDING,
             },
         });
 
@@ -116,6 +134,14 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
     try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+        const currentUser = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (!currentUser || currentUser.status === UserStatus.DEACTIVE) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
 
@@ -134,7 +160,6 @@ export async function PUT(req: Request) {
                 mobileNumber: data.mobileNumber,
                 defaultLanguage: (data.defaultLanguage as Language) || Language.EN,
                 image: data.image,
-                isActive: data.isActive,
             },
         });
 
@@ -146,6 +171,14 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+        const currentUser = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (!currentUser || currentUser.status === UserStatus.DEACTIVE) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
 

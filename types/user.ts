@@ -1,3 +1,5 @@
+import { UserStatus } from '@prisma/client';
+
 export type User = {
     id: string;
     firstName: string;
@@ -7,7 +9,7 @@ export type User = {
     tempPassword: string;
     mobileNumber: string;
     defaultLanguage: string;
-    isActive: boolean;
+    status: UserStatus;
 
     createdAt: string;
     updatedAt: string;
