@@ -24,27 +24,18 @@ export default function LoginPage() {
         const res = await signIn('credentials', { redirect: false, email, password });
         setIsLoading(false);
 
-        if (res?.error) {
-            setError('An error occurred during login. Please check your credentials and try again.');
-            console.log('res', res);
+        if (res?.error == 'CredentialsSignin') {
+            setError('Invalid email or password');
+            return
         }
 
         router.replace(Routes.OVERVIEW.url);
     };
 
-    // const handleGoogleLogin = async () => {
-    //     try {
-    //         await signIn('google', { callbackUrl: Routes.OVERVIEW.url });
-    //     } catch (error) {
-    //         console.error('GitHub login error:', error);
-    //         setError('An error occurred during GitHub login. Please try again.');
-    //     }
-    // };
-
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center">Sign In</h1>
+                <h1 className="text-2xl font-bold mb-8">Sign In</h1>
 
                 {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">{error}</div>}
 
@@ -77,12 +68,6 @@ export default function LoginPage() {
                         Sign in
                     </Button>
                 </form>
-
-                <div className="flex items-center my-4">
-                    <div className="flex-grow h-px bg-gray-300" />
-                    <span className="px-2 text-gray-500 text-sm">or</span>
-                    <div className="flex-grow h-px bg-gray-300" />
-                </div>
 
                 {/* <Button
                     onClick={handleGoogleLogin}

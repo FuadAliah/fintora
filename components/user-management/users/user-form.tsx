@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { UserFormValues, UserSchema } from '@/zod/user';
 import { handleGeneratePassword } from '@/utils/password-generate';
 import { User } from '@/types/user';
+import { Language } from '@prisma/client';
 
 interface UserFormProps {
     onSubmit: (data: UserFormValues) => void;
@@ -23,7 +24,7 @@ export function UserForm({ onSubmit, defaultValues }: UserFormProps) {
             email: defaultValues?.email ?? '',
             image: defaultValues?.image ?? '',
             mobileNumber: defaultValues?.mobileNumber ?? '',
-            defaultLanguage: defaultValues?.defaultLanguage ?? 'en',
+            defaultLanguage: defaultValues?.defaultLanguage ?? Language.EN,
         },
     });
 

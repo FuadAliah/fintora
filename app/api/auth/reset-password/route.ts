@@ -18,7 +18,6 @@ export async function POST(req: Request) {
                 passwordHash: newHash,
                 tempPassword: "",
                 forcePasswordChange: false,
-                isActive: true,
             },
         });
 

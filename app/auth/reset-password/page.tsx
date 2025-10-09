@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Routes } from '@/utils/routes';
 
 export default function ChangePasswordPage() {
     const { data: session } = useSession();
-    const router = useRouter();
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -62,38 +60,39 @@ export default function ChangePasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-xl font-bold mb-4">Change Your Password</h1>
+        <main className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h1 className="text-xl font-bold mb-8">Change Your Password</h1>
 
                 {error && <p className="text-red-500 mb-4">{error}</p>}
+                <form onSubmit={handleSubmit}>
+                    <label className="block mb-2">
+                        New Password
+                        <Input
+                            type="text"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                            className="w-full mt-1 p-2 border rounded"
+                        />
+                    </label>
 
-                <label className="block mb-2">
-                    New Password
-                    <Input
-                        type="text"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        required
-                        className="w-full mt-1 p-2 border rounded"
-                    />
-                </label>
+                    <label className="block mb-4">
+                        Confirm Password
+                        <Input
+                            type="text"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            className="w-full mt-1 p-2 border rounded"
+                        />
+                    </label>
 
-                <label className="block mb-4">
-                    Confirm Password
-                    <Input
-                        type="text"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                        className="w-full mt-1 p-2 border rounded"
-                    />
-                </label>
-
-                <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    {loading ? 'Updating...' : 'Update Password'}
-                </button>
-            </form>
-        </div>
+                    <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                        {loading ? 'Updating...' : 'Update Password'}
+                    </button>
+                </form>
+            </div>
+        </main>
     );
 }

@@ -6,22 +6,35 @@ import { DataTablePagination } from '../../ui/pagination';
 import { UsersFilter } from './users-filter';
 import { User } from '@/types/user';
 import { UsersColumns } from './users-columns';
+import { OrderType, SortType } from '@/app/dashboard/user-management/users/page';
+import { ChevronDown } from 'lucide-react';
 
 type UsersTableProps = {
     data: User[];
     loading: boolean;
     username: string;
-    
+    setUsername: (username: string) => void;
+
+    onActive: (id: string) => void;
+    onDeactive: (id: string) => void;
+    onResetPassword: (id: string) => void;
+    onDeleteUser: (id: string) => void;
+    onOpenDeleteDialog: (user: User) => void;
+
+    sort: SortType;
+    order: OrderType;
+    onSort: (field: SortType) => void;
+
     pageSize?: number;
     isPagination?: boolean;
     currentPage: number;
     totalPages: number;
     totalCount: number;
+
     onPageChange: (page: number) => void;
     onPageSizeChange: (pageSize: number) => void;
-    setUsername: (username: string) => void;
-    handleView: (user: User) => void;
-    handleDelete: (user: User) => void;
+
+    session: string;
 };
 
 export function UsersTable({
@@ -29,32 +42,47 @@ export function UsersTable({
     isPagination = true,
     data,
     loading,
+    username,
+    setUsername,
+    onActive,
+    onDeactive,
+    onResetPassword,
+    onOpenDeleteDialog,
+    sort,
+    order,
+    onSort,
     currentPage,
     totalPages,
     totalCount,
     onPageChange,
     onPageSizeChange,
-    username,
-    setUsername,
-    handleView,
-    handleDelete,
+    session,
 }: UsersTableProps) {
-    const usersColumns = UsersColumns(handleView, handleDelete);
+    const usersColumns = UsersColumns({ onActive, onDeactive, onResetPassword, onOpenDeleteDialog, session });
 
     return (
-        <Card className="border-0">
+        <Card className="border-0 bg-transparent shadow-none p-0">
             <UsersFilter username={username} setUsername={setUsername} />
             <Table className="text-sm border" loading={loading}>
-                <TableHeader className="bg-slate-100 rounded-t-2xl">
+                <TableHeader>
                     <TableRow>
                         {usersColumns.map((column) => (
                             <TableHead key={column.accessor}>
-                                <span>{column.header}</span>
+                                {column.sortable ? (
+                                    <button className="flex items-center gap-1" onClick={() => onSort(column.accessor as SortType)}>
+                                        <span>{column.header}</span>
+                                        <ChevronDown
+                                            className={`w-4 h-4 ${sort === column.accessor && order === 'asc' ? 'rotate-180' : ''}`}
+                                        />
+                                    </button>
+                                ) : (
+                                    <span>{column.header}</span>
+                                )}
                             </TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
-                
+
                 <TableBody>
                     {data.length ? (
                         data.map((user: User) => (
