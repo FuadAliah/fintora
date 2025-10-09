@@ -8,40 +8,9 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum CustomerType {
-    personal
-    corporate
-    government
-}
-
-enum IdentificationType {
-    passport
-    nationalID
-    driverLicense
-    CRN
-}
-
-enum UserRole {
-    ADMIN
-    USER
-}
-
 enum Language {
     EN
     AR
-}
-
-enum InvoiceStatus {
-    DRAFT
-    ISSUED
-    CANCELED
-}
-
-enum PaymentType {
-    CASH
-    CARD
-    BANK_TRANSFER
-    OTHER
 }
 
 enum UserStatus {

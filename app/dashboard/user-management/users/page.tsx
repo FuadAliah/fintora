@@ -156,6 +156,7 @@ export default function UsersPage() {
     useEffect(() => {
         if (!session) return;
         fetchUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, currentPage, pageSize, username, sort, order]);
 
     return (

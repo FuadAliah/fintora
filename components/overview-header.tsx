@@ -1,6 +1,5 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import { AddInvoiceDrawer } from './invoices/add-invoice-drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Button } from './ui/button';
 import { ChevronDown } from 'lucide-react';

@@ -3,10 +3,9 @@ import { Overview } from '@/types';
 
 type DashboardStatsProps = {
     overview: Overview | undefined;
-    isLoading: boolean;
 };
 
-const DashboardStats = ({ overview, isLoading }: DashboardStatsProps) => {
+const DashboardStats = ({ overview }: DashboardStatsProps) => {
     return (
         <div className="flex-1 lg:flex-[1] grid grid-cols-1 lg:grid-cols-4 gap-4">
             <SummaryCard

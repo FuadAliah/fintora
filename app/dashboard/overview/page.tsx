@@ -3,13 +3,12 @@
 import React, { useEffect, useState } from 'react';
 // import { InvoicesTable } from '@/components/overview/invoices-table';
 // import { InvoicesOverview } from '@/components/overview/invoices-chart';
-import { OverviewResponse } from '@/types';
+// import { OverviewResponse } from '@/types';
 import { DateRangeEnum } from '@/constant';
-import DashboardStats from '@/components/overview/dashboard-statistics';
+// import DashboardStats from '@/components/overview/dashboard-statistics';
 import OverviewHeader from '@/components/overview-header';
 
 export default function Overview() {
-    const [invoices, setInvoices] = useState<OverviewResponse | undefined>(undefined);
     const [preset, setPreset] = useState<string>(DateRangeEnum.LAST_30_DAYS);
 
     const fetchInvoices = async () => {
@@ -27,7 +26,7 @@ export default function Overview() {
             <div className="w-full">
                 <div className="mx-auto">
                     <OverviewHeader preset={preset} setPreset={setPreset} />
-                    <DashboardStats overview={invoices?.data} isLoading={!invoices?.data} />
+                    {/* <DashboardStats overview={invoices?.data} isLoading={!invoices?.data} /> */}
                 </div>
             </div>
             <div className="mx-auto mt-8">
