@@ -1,8 +1,9 @@
+import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import prisma from './prisma';
 import { AuthOptions } from 'next-auth';
-import type { Session } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import { compare } from 'bcryptjs';
+import { UserStatus } from '@prisma/client';
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -10,51 +11,108 @@ export const authOptions: AuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
+
+        CredentialsProvider({
+            name: 'Credentials',
+            credentials: {
+                email: { label: 'Email', type: 'text' },
+                password: { label: 'Password', type: 'password' },
+            },
+
+            authorize: async (credentials) => {
+                if (!credentials?.email || !credentials?.password) return null;
+
+                const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+
+                if (!user) {
+                    throw new Error('No user found with this email');
+                }
+
+                const validPassword = await compare(credentials.password, user.passwordHash);
+                if (!validPassword) return null;
+
+                if (user.status === UserStatus.DEACTIVE) {
+                    throw new Error('User is Deactivated');
+                }
+
+                // ✅ if normal login
+                if (user.status === UserStatus.PENDING) {
+                    await prisma.user.update({ where: { id: user.id }, data: { status: UserStatus.ACTIVE } });
+                }
+
+                if (user.forcePasswordChange) {
+                    return {
+                        id: user.id,
+                        email: user.email,
+                        username: `${user.firstName} ${user.lastName}`,
+                        forcePasswordChange: true,
+                        status: user.status,
+                    };
+                }
+
+                // normal login => set the user object in jwt -> user
+                return {
+                    id: user.id,
+                    email: user.email,
+                    username: `${user.firstName} ${user.lastName}`,
+                    forcePasswordChange: false,
+                    status: user.status,
+                };
+            },
+        }),
     ],
 
     callbacks: {
-        async signIn({ user }) {
-            if (!user.email) return false;
-
-            const existingUser = await prisma.user.findUnique({
-                where: { email: user.email },
-            });
-
-            if (!existingUser) {
-                await prisma.user.create({
-                    data: {
-                        id: user.id,
-                        name: user.name,
-                        email: user.email,
-                        image: user.image,
-                    },
-                });
+        async jwt({ user, token }) {
+            if (user) {
+                token.id = user.id;
+                token.email = user.email;
+                token.username = user.username;
+                token.forcePasswordChange = user.forcePasswordChange;
+                token.status = user.status;
             }
 
-            return true;
-        },
+            if (token?.id) {
+                const dbUser = await prisma.user.findUnique({ where: { id: token.id } });
 
-        async jwt({ token, user }) {
-            if (user?.email) {
-                const dbUser = await prisma.user.findUnique({
-                    where: { email: user.email },
-                });
-
-                if (dbUser) token.id = dbUser.id;
+                if (!dbUser || dbUser.status === UserStatus.DEACTIVE) {
+                    token.id = undefined;
+                    token.email = undefined;
+                    token.username = undefined;
+                    token.forcePasswordChange = undefined;
+                    token.status = UserStatus.DEACTIVE;
+                } else {
+                    token.email = dbUser.email;
+                    token.username = `${dbUser.firstName} ${dbUser.lastName}`;
+                    token.forcePasswordChange = dbUser.forcePasswordChange;
+                    token.status = dbUser.status;
+                }
             }
+
             return token;
         },
 
-        async session({ session, token }: { session: Session; token: JWT }) {
-            if (session.user) {
-                session.user.id = token.id as string;
+        async session({ session, token }) {
+            if (!token?.id) {
+                session.user = undefined;
+                return session;
             }
+
+            session.user = {
+                id: token.id,
+                email: token.email ?? '',
+                username: token.username ?? '',
+                forcePasswordChange: token.forcePasswordChange ?? false,
+                status: token.status ?? '',
+            };
+
             return session;
         },
     },
 
     pages: {
-        signIn: '/login',
+        signIn: '/auth/login',
+        error: '/auth/reset-password', // Redirecting to change-password page on error
     },
 
     session: {

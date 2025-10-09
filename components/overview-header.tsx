@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import AddTransactionDrawer from './transactions/add-transaction-drawer';
+import { AddInvoiceDrawer } from './invoices/add-invoice-drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Button } from './ui/button';
 import { ChevronDown } from 'lucide-react';
@@ -17,17 +17,16 @@ type DashboardHeaderProps = {
     setPreset: (value: string) => void;
 };
 
-export default function DashboardHeader({ preset, setPreset }: DashboardHeaderProps) {
+export default function OverviewHeader({ preset, setPreset }: DashboardHeaderProps) {
     const { data: session } = useSession();
     const currentLabel = ranges.find((r) => r.value === preset)?.label;
 
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-between space-y-7 py-9">
+        <div className="flex flex-col lg:flex-row items-center justify-between mt-4 mb-6">
             <div className="space-y-1">
-                <h2 className="text-2xl lg:text-4xl font-bold text-white">Welcome back, {session?.user?.name ?? 'Guest'}</h2>
-                <p className="text-white/60 text-sm">This is your overview report for the selected period</p>
+                <h2 className="text-2xl lg:text-xl font-bold">Welcome, {session?.user?.name ?? 'Guest'}</h2>
             </div>
-            <div className="flex justify-end gap-4 mb-6">
+            <div className="flex justify-end gap-4">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline">
@@ -43,8 +42,6 @@ export default function DashboardHeader({ preset, setPreset }: DashboardHeaderPr
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
-
-                <AddTransactionDrawer />
             </div>
         </div>
     );

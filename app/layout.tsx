@@ -4,6 +4,7 @@ import { Providers } from './providers';
 import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -25,7 +26,9 @@ export default async function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${rubik.variable} antialiased`}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    <TooltipProvider>{children}</TooltipProvider>
+                </Providers>
                 <Toaster />
             </body>
         </html>

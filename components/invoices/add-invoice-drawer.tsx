@@ -1,0 +1,57 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { PlusIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
+import { InvoiceForm } from './invoice-form';
+import { InvoiceFormValues } from '@/zod/invoice';
+// import { useSession } from 'next-auth/react';
+
+export const AddInvoiceDrawer = () => {
+    const [open, setOpen] = useState(false);
+
+    const onCloseDrawer = async (data: InvoiceFormValues) => {
+        try {
+            const res = await fetch('/api/invoices', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...data,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                }),
+            });
+
+            if (!res.ok) throw new Error('Failed to create invoice');
+
+            const result = await res.json();
+            console.log('✅ Invoice created:', result);
+        } catch (err) {
+            console.error('❌ Error creating invoice:', err);
+        }
+        setOpen(false);
+    };
+
+    return (
+        <Drawer direction="right" open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
+                <Button className="!cursor-pointer !text-white">
+                    <PlusIcon className="h-4 w-4" />
+                    Add Invoice
+                </Button>
+            </DrawerTrigger>
+            <DrawerContent className="overflow-hidden overflow-y-auto">
+                <DrawerHeader className="relative">
+                    <div>
+                        <DrawerTitle className="text-xl font-semibold">Add Invoice</DrawerTitle>
+                        <DrawerDescription>Add a new invoice to track your finances</DrawerDescription>
+                    </div>
+                    <DrawerClose className="absolute top-4 right-4">
+                        <XIcon className="h-5 w-5 !cursor-pointer" />
+                    </DrawerClose>
+                </DrawerHeader>
+                <InvoiceForm onSubmit={onCloseDrawer} />
+            </DrawerContent>
+        </Drawer>
+    );
+};

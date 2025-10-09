@@ -1,3 +1,37 @@
+// export type User = {
+//     id: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     image?: string;
+//     tempPassword: string;
+//     mobileNumber: string;
+//     defaultLanguage: string;
+
+//     createdAt: string;
+//     updatedAt: string;
+// };
+
+export type Invoice = {
+    id: string;
+    invoiceNumber: string;
+    englishName: string;
+    arabicName: string;
+    paymentType: 'CASH' | 'CARD' | 'BANK_TRANSFER' | 'OTHER';
+    status: 'DRAFT' | 'ISSUED' | 'CANCELED';
+    paymentStatus: 'UNPAID' | 'PAID' | 'PARTIALLY_PAID';
+    subtotal: number;
+    tax: number;
+    total: number;
+    description: string;
+    createdBy: string;
+    createdById: string;
+
+    createdAt: string;
+    updatedAt: string;
+};
+
+// old types
 export type OverviewType = {
     month: string;
     expenses: number;
@@ -19,24 +53,9 @@ export type ChartData = {
     series: ChartSeries;
 };
 
-export type Transaction = {
-    id: string;
-    title: string;
-    category: string;
-    type: string;
-    amount: number | null;
-    paymentMethod: string;
-    userId: string;
-    description: string;
-    date: string; // ISO string
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-};
-
-export type TransactionResponse = {
-    data: Transaction[];
-    totalTransactions: number;
+export type InvoiceResponse = {
+    data: Invoice[];
+    totalItems: number;
     currentPage: number;
     pageSize: number;
     totalPages: number;
@@ -70,7 +89,7 @@ export type Overview = {
     availableBalance: number;
     totalIncome: number;
     totalExpenses: number;
-    transactionCount: number;
+    invoiceCount: number;
     savingRate: SavingRate;
     percentageChange: PercentageChange;
     previousValues: PreviousValues;
