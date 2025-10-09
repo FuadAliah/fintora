@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Routes } from '@/utils/routes';
 
 export default function ChangePasswordPage() {
     const { data: session } = useSession();
-    const router = useRouter();
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

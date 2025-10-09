@@ -1,7 +1,7 @@
 import { ChartPie, House, NotepadText, Package2, Settings, Users, UsersRound } from 'lucide-react';
 
 export const Routes = {
-    LOGIN: '/login',
+    LOGIN: '/auth/login',
     HOME: '/',
 
     // Dashboard
@@ -24,6 +24,6 @@ export const Routes = {
 };
 
 export const AuthRoutes = {
-    LOGIN: '/login',
+    LOGIN: '/auth/login',
     RESET_PASSWORD: '/auth/reset-password',
 };

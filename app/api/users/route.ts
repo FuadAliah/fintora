@@ -13,7 +13,6 @@ const querySchema = z.object({
     image: z.string().optional(),
     mobileNumber: z.string().optional(),
     defaultLanguage: z.string().optional(),
-    isActive: z.string().optional(),
 
     // pagination + sorting
     currentPage: z.coerce.number().int().min(1).default(1),
@@ -38,14 +37,13 @@ const updateUserSchema = z.object({
     mobileNumber: z.string().optional(),
     defaultLanguage: z.enum(Language).optional(),
     image: z.string().optional(),
-    isActive: z.boolean().optional(),
 });
 
 function buildWhere(params: z.infer<typeof querySchema>): Prisma.UserWhereInput {
     const { firstName } = params;
 
     const where: Prisma.UserWhereInput = {
-        ...(firstName && { firstName: { contains: firstName, mode: 'insensitive' } }),
+        ...(firstName && firstName?.length >= 3 && { firstName: { startsWith: firstName, mode: 'insensitive' } }),
     };
 
     return where;
@@ -60,12 +58,12 @@ export async function GET(req: Request) {
         if (!currentUser || currentUser.status === UserStatus.DEACTIVE) {
             return NextResponse.json({ message: 'User Unauthorized' }, { status: 401 });
         }
-        
+
         const { searchParams } = new URL(req.url);
         const params = querySchema.parse(Object.fromEntries(searchParams));
         const { currentPage, pageSize, sort, order } = params;
 
-        const allowedSort = ['createdAt', 'email', 'firstName', 'lastName'];
+        const allowedSort = ['status', 'firstName', 'lastName'];
         const sortField = allowedSort.includes(sort) ? sort : 'createdAt';
 
         const where = buildWhere(params);

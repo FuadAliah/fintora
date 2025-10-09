@@ -2,11 +2,12 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 interface LoadingIndicatorProps {
     className?: string;
+    size?: string;
 }
 
-const TableLoadingIndicator = React.forwardRef<HTMLDivElement, LoadingIndicatorProps>(({ className, ...props }, ref) => (
+const TableLoadingIndicator = React.forwardRef<HTMLDivElement, LoadingIndicatorProps>(({ className, size = 'w-6 h-6', ...props }, ref) => (
     <div ref={ref} className={cn('flex items-center justify-center p-4 w-full', className)} {...props}>
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className={cn(size, 'animate-spin rounded-full border-2 border-primary border-t-transparent')} />
     </div>
 ));
 TableLoadingIndicator.displayName = 'TableLoadingIndicator';
@@ -23,7 +24,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, loadi
             {loading ? (
                 <tbody>
                     <tr>
-                        <td colSpan={columns} className="p-8 text-center">
+                        <td colSpan={columns}>
                             <TableLoadingIndicator className="w-full h-10" />
                         </td>
                     </tr>
@@ -31,11 +32,13 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, loadi
             ) : React.Children.count(children) > 0 ? (
                 children
             ) : (
-                <tr>
-                    <td colSpan={columns} className="text-center text-muted-foreground p-8">
-                        {empty || 'No data available'}
-                    </td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <td colSpan={columns} className="text-center text-muted-foreground p-8">
+                            {empty || 'No data available'}
+                        </td>
+                    </tr>
+                </tbody>
             )}
         </table>
     </div>

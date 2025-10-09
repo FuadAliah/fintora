@@ -1,4 +1,4 @@
-import { UserStatus } from '@prisma/client';
+import { Language, UserStatus } from '@prisma/client';
 
 export type User = {
     id: string;
@@ -8,7 +8,7 @@ export type User = {
     image?: string;
     tempPassword: string;
     mobileNumber: string;
-    defaultLanguage: string;
+    defaultLanguage: Language;
     status: UserStatus;
 
     createdAt: string;
@@ -19,5 +19,6 @@ export type Column<User> = {
     accessor?: keyof User | string;
     id?: string;
     header: string;
+    sortable: boolean;
     cell: (props: { row: User }) => JSX.Element;
 };

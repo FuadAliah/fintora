@@ -24,9 +24,9 @@ export default function LoginPage() {
         const res = await signIn('credentials', { redirect: false, email, password });
         setIsLoading(false);
 
-        if (res?.error) {
-            setError(res?.error);
-            console.log('res', res);
+        if (res?.error == 'CredentialsSignin') {
+            setError('Invalid email or password');
+            return
         }
 
         router.replace(Routes.OVERVIEW.url);
