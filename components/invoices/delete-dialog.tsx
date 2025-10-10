@@ -16,7 +16,7 @@ export function DeleteDialog({ open, onOpenChange, handleDelete, invoice }: Dele
                 <DialogHeader>
                     <DialogTitle>Delete</DialogTitle>
                     <DialogDescription>
-                        Are you sure you would to delete <span className="text-red-500 font-bold">{invoice.title}</span> invoice?
+                        Are you sure you would to delete <span className="text-red-500 font-bold">{invoice.invoiceNumber}</span> invoice?
                     </DialogDescription>
                 </DialogHeader>
 

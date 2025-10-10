@@ -5,7 +5,6 @@ import { PlusIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { InvoiceForm } from './invoice-form';
 import { InvoiceFormValues } from '@/zod/invoice';
-// import { useSession } from 'next-auth/react';
 
 export const AddInvoiceDrawer = () => {
     const [open, setOpen] = useState(false);
