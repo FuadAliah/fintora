@@ -1,5 +1,4 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
 import prisma from './prisma';
 import { AuthOptions } from 'next-auth';
 import { compare } from 'bcryptjs';
@@ -7,11 +6,6 @@ import { UserStatus } from '@prisma/client';
 
 export const authOptions: AuthOptions = {
     providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
-
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -112,7 +106,7 @@ export const authOptions: AuthOptions = {
 
     pages: {
         signIn: '/auth/login',
-        error: '/auth/reset-password', // Redirecting to change-password page on error
+        error: '/auth/reset-password',
     },
 
     session: {

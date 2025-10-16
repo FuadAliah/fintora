@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 const Drawer = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Root>
->(({ ...props }, ref) => (
+>(({ ...props }) => (
   <DrawerPrimitive.Root data-slot="drawer" {...props} />
 ))
 Drawer.displayName = "Drawer"
@@ -24,7 +24,7 @@ DrawerTrigger.displayName = "DrawerTrigger"
 const DrawerPortal = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Portal>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Portal>
->(({ ...props }, ref) => (
+>(({ ...props }) => (
   <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />
 ))
 DrawerPortal.displayName = "DrawerPortal"

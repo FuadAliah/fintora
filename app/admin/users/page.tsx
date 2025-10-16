@@ -1,14 +1,14 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
-import { AddUserDrawer } from '@/components/user-management/users/add-user-drawer';
-import PageHeader from '@/components/page-header';
-import { UsersTable } from '@/components/user-management/users/users-table';
+import { AddUserDrawer } from '@/components/users/add-user-drawer';
+import PageHeader from '@/components/core/page-header';
+import { UsersTable } from '@/components/users/users-table';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { User } from '@/types/user';
 import { UserFormValues } from '@/zod/user';
 import { UserStatus } from '@prisma/client';
-import { DeleteDialog } from '@/components/user-management/users/delete-dialog';
+import { DeleteDialog } from '@/components/users/delete-dialog';
 
 export type SortType = string;
 export type OrderType = 'asc' | 'desc';
@@ -156,6 +156,7 @@ export default function UsersPage() {
     useEffect(() => {
         if (!session) return;
         fetchUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, currentPage, pageSize, username, sort, order]);
 
     return (
