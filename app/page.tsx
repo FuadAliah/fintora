@@ -1,4 +1,4 @@
-import { Routes } from '@/utils/routes';
+import { AuthRoutes, Routes } from '@/utils/routes';
 import Image from 'next/image';
 import { UserProfile } from './_components/user-profile';
 import { getServerSession } from 'next-auth';
@@ -11,7 +11,7 @@ export default async function Home() {
         <div>
             <nav className="w-full flex justify-between items-center mx-auto">
                 <div className="flex items-center py-3">
-                    <a href={Routes.HOME} className="flex flex-1 items-center">
+                    <a href={AuthRoutes.HOME} className="flex flex-1 items-center">
                         <Image alt="" src="/logo.svg" className="h-8 min-w-10 w-auto" width={40} height={40} />
                     </a>
                 </div>
@@ -34,7 +34,7 @@ export default async function Home() {
                         <div className="mt-4 flex justify-center gap-4 sm:mt-6">
                             <a
                                 className="inline-block rounded border border-indigo-600 bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-                                href={Routes.OVERVIEW.url}
+                                href={Routes.USERS.url}
                             >
                                 Get Started
                             </a>

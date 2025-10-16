@@ -26,10 +26,10 @@ export default function LoginPage() {
 
         if (res?.error == 'CredentialsSignin') {
             setError('Invalid email or password');
-            return
+            return;
         }
 
-        router.replace(Routes.OVERVIEW.url);
+        router.replace(Routes.USERS.url);
     };
 
     return (

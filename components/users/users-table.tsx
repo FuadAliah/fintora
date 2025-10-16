@@ -2,11 +2,11 @@
 
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
-import { DataTablePagination } from '../../ui/pagination';
+import { DataTablePagination } from '@/components/ui/pagination';
 import { UsersFilter } from './users-filter';
 import { User } from '@/types/user';
 import { UsersColumns } from './users-columns';
-import { OrderType, SortType } from '@/app/dashboard/user-management/users/page';
+import { OrderType, SortType } from '@/app/dashboard/users/page';
 import { ChevronDown } from 'lucide-react';
 
 type UsersTableProps = {
