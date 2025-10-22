@@ -9,6 +9,7 @@ import { User } from '@/types/user';
 import { UserFormValues } from '@/zod/user';
 import { UserStatus } from '@prisma/client';
 import { DeleteDialog } from '@/components/users/delete-dialog';
+import { splitArrays } from '@/utils/format-text';
 
 export type SortType = string;
 export type OrderType = 'asc' | 'desc';
@@ -87,6 +88,9 @@ export default function UsersPage() {
             setOrder('asc');
         }
     };
+
+    const arra = [1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 15, 16, 17, 19, 20];
+    splitArrays(arra);
 
     const onCloseDrawer = async (data: UserFormValues) => {
         try {

@@ -1,5 +1,5 @@
 import { Column, User } from '@/types/user';
-import { Button } from '../../ui/button';
+import { Button } from '@/components/ui/button';
 import { Eye, KeyRound, Lock, Trash, Unlock } from 'lucide-react';
 import { UserStatus } from '@prisma/client';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -67,7 +67,7 @@ export function UsersColumns({ onActive, onDeactive, onResetPassword, onOpenDele
                         <TooltipTrigger asChild>
                             <Button
                                 onClick={() => {
-                                    router.push(`${Routes.USERMANAGE?.children?.find((r) => r.label === 'Users')?.url}/${row.id}`);
+                                    router.push(`${Routes.USERS?.url}/${row.id}`);
                                 }}
                                 className={`${'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-700'} w-[32px] h-[32px] transition-colors duration-300`}
                                 size="icon"

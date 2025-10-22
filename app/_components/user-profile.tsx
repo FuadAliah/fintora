@@ -1,7 +1,7 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Routes } from '@/utils/routes';
+import { AuthRoutes } from '@/utils/routes';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -80,7 +80,7 @@ export function UserProfile() {
     }
 
     return (
-        <Button variant="link" size="sm" onClick={() => router.push(Routes.LOGIN)}>
+        <Button variant="link" size="sm" onClick={() => router.push(AuthRoutes.LOGIN)}>
             Sign in
         </Button>
     );

@@ -6,7 +6,7 @@ import { DataTablePagination } from '@/components/ui/pagination';
 import { UsersFilter } from './users-filter';
 import { User } from '@/types/user';
 import { UsersColumns } from './users-columns';
-import { OrderType, SortType } from '@/app/dashboard/users/page';
+import { OrderType, SortType } from '@/app/admin/users/page';
 import { ChevronDown } from 'lucide-react';
 
 type UsersTableProps = {

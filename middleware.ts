@@ -7,7 +7,12 @@ export async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    if (url.pathname.startsWith(AuthRoutes.RESET_PASSWORD) || url.pathname.startsWith('/api/auth') || url.pathname.startsWith('/_next')) {
+    if (
+        url.pathname.startsWith(AuthRoutes.RESET_PASSWORD) ||
+        url.pathname.startsWith('/api/auth') ||
+        url.pathname.startsWith('/_next') ||
+        url.pathname.startsWith('/favicon.ico')
+    ) {
         return NextResponse.next();
     }
 
@@ -30,5 +35,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/dashboard/:path*'],
+    matcher: ['/admin/:path*'],
 };
